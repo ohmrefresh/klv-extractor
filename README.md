@@ -1,6 +1,6 @@
 # KLV Extractor
 
-A React-based KLV (Key-Length-Value) data extraction and processing suite for Paymentology transaction data. This application provides a complete toolkit for parsing, building, and batch processing KLV formatted data.
+A React-based KLV (Key-Length-Value) data extraction and processing suite for transaction data. This application provides a complete toolkit for parsing, building, and batch processing KLV formatted data.
 
 ## Features
 
@@ -11,7 +11,7 @@ A React-based KLV (Key-Length-Value) data extraction and processing suite for Pa
 - **Export functionality** to JSON, CSV, and table formats
 - **Processing history** with load and copy functionality
 - **Sample data** included for testing and demonstration
-- **Complete field definitions** for 100+ Paymentology KLV fields (keys 002-999)
+- **Complete field definitions** for 100+ KLV fields (keys 002-999)
 
 ## Getting Started
 
