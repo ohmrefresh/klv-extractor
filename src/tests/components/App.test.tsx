@@ -22,7 +22,7 @@ describe('App Integration Tests', () => {
       render(<App />);
       
       expect(screen.getByText('KLV Data Extraction Suite')).toBeInTheDocument();
-      expect(screen.getByText('Complete toolkit for Paymentology KLV data processing, parsing, and analysis')).toBeInTheDocument();
+      expect(screen.getByText('Complete toolkit for KLV data processing, parsing, and analysis')).toBeInTheDocument();
       
       // Check navigation tabs
       expect(screen.getByText('Extractor')).toBeInTheDocument();

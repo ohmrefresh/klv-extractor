@@ -31,7 +31,7 @@ export interface KLVBuildEntry {
 type ExportFormat = 'json' | 'csv' | 'table';
 
 const KLVParser = {
-  // Complete KLV definitions from Paymentology documentation
+  // Complete KLV definitions
   definitions: {
     '002': 'Tracking Number',
     '004': 'Original Transaction Amount',

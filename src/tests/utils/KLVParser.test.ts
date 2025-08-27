@@ -289,7 +289,7 @@ describe('KLVParser', () => {
   });
 
   describe('definitions', () => {
-    it('should contain known Paymentology KLV keys', () => {
+    it('should contain known KLV keys', () => {
       expect(KLVParser.definitions['002']).toBe('Tracking Number');
       expect(KLVParser.definitions['026']).toBe('Merchant Category Code');
       expect(KLVParser.definitions['042']).toBe('Merchant Identifier');

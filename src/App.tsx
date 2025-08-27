@@ -120,7 +120,7 @@ const App: React.FC = () => {
             KLV Data Extraction Suite
           </h1>
           <p className="text-gray-600">
-            Complete toolkit for Paymentology KLV data processing, parsing, and analysis
+            Complete toolkit for KLV data processing, parsing, and analysis
           </p>
         </div>
 
