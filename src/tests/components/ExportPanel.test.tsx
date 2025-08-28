@@ -3,25 +3,7 @@ import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ExportPanel from '../../components/ExportPanel';
 import { KLVEntry } from '../../utils/KLVParser';
-
-// Mock DOM APIs
-const mockObjectURL = 'mock-blob-url';
-const mockCreateObjectURL = jest.fn().mockReturnValue(mockObjectURL);
-const mockRevokeObjectURL = jest.fn();
-const mockClick = jest.fn();
-const mockAppendChild = jest.fn();
-const mockRemoveChild = jest.fn();
-
-// Mock URL APIs
-Object.defineProperty(URL, 'createObjectURL', {
-  writable: true,
-  value: mockCreateObjectURL
-});
-
-Object.defineProperty(URL, 'revokeObjectURL', {
-  writable: true,
-  value: mockRevokeObjectURL
-});
+import { mockURLAPIs, mockDOMFileDownload } from '../helpers/testUtils';
 
 // Mock Blob constructor
 global.Blob = jest.fn().mockImplementation((content, options) => ({
@@ -30,28 +12,8 @@ global.Blob = jest.fn().mockImplementation((content, options) => ({
   size: content[0]?.length || 0
 })) as any;
 
-// Mock document methods
-const mockElement = {
-  click: mockClick,
-  href: '',
-  download: '',
-  style: {}
-};
-
-Object.defineProperty(document, 'createElement', {
-  writable: true,
-  value: jest.fn().mockReturnValue(mockElement)
-});
-
-Object.defineProperty(document.body, 'appendChild', {
-  writable: true,
-  value: mockAppendChild
-});
-
-Object.defineProperty(document.body, 'removeChild', {
-  writable: true,
-  value: mockRemoveChild
-});
+let domMocks: any;
+let urlMocks: any;
 
 describe('ExportPanel', () => {
   const mockResults: KLVEntry[] = [
@@ -77,6 +39,7 @@ describe('ExportPanel', () => {
 
   afterEach(() => {
     cleanup();
+    domMocks?.cleanup();
   });
 
   describe('Rendering', () => {
@@ -125,6 +88,10 @@ describe('ExportPanel', () => {
       const user = userEvent.setup();
       render(<ExportPanel results={mockResults} />);
       
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
+      
       const jsonButton = screen.getByText('JSON');
       await user.click(jsonButton);
       
@@ -132,17 +99,21 @@ describe('ExportPanel', () => {
         [expect.stringContaining('"key": "002"')],
         { type: 'application/json' }
       );
-      expect(mockCreateObjectURL).toHaveBeenCalled();
+      expect(urlMocks.mockCreateObjectURL).toHaveBeenCalled();
       expect(document.createElement).toHaveBeenCalledWith('a');
-      expect(mockAppendChild).toHaveBeenCalled();
-      expect(mockClick).toHaveBeenCalled();
-      expect(mockRemoveChild).toHaveBeenCalled();
-      expect(mockRevokeObjectURL).toHaveBeenCalledWith(mockObjectURL);
+      expect(domMocks.mocks.mockAppendChild).toHaveBeenCalled();
+      expect(domMocks.mocks.mockClick).toHaveBeenCalled();
+      expect(domMocks.mocks.mockRemoveChild).toHaveBeenCalled();
+      expect(urlMocks.mockRevokeObjectURL).toHaveBeenCalledWith('mock-blob-url');
     });
 
     it('should trigger CSV export when CSV button is clicked', async () => {
       const user = userEvent.setup();
       render(<ExportPanel results={mockResults} />);
+      
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
       
       const csvButton = screen.getByText('CSV');
       await user.click(csvButton);
@@ -151,13 +122,17 @@ describe('ExportPanel', () => {
         [expect.stringContaining('Key,Name,Length,Value,Position')],
         { type: 'text/csv' }
       );
-      expect(mockCreateObjectURL).toHaveBeenCalled();
-      expect(mockClick).toHaveBeenCalled();
+      expect(urlMocks.mockCreateObjectURL).toHaveBeenCalled();
+      expect(domMocks.mocks.mockClick).toHaveBeenCalled();
     });
 
     it('should trigger Table export when Table button is clicked', async () => {
       const user = userEvent.setup();
       render(<ExportPanel results={mockResults} />);
+      
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
       
       const tableButton = screen.getByText('Table');
       await user.click(tableButton);
@@ -166,48 +141,64 @@ describe('ExportPanel', () => {
         [expect.stringContaining('002')],
         { type: 'text/plain' }
       );
-      expect(mockCreateObjectURL).toHaveBeenCalled();
-      expect(mockClick).toHaveBeenCalled();
+      expect(urlMocks.mockCreateObjectURL).toHaveBeenCalled();
+      expect(domMocks.mocks.mockClick).toHaveBeenCalled();
     });
 
     it('should generate filename with timestamp for JSON export', async () => {
       const user = userEvent.setup();
       render(<ExportPanel results={mockResults} />);
       
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
+      
       const jsonButton = screen.getByText('JSON');
       await user.click(jsonButton);
       
-      expect(mockElement.download).toMatch(/klv-data-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.json/);
+      expect(domMocks.mocks.mockElement.download).toMatch(/klv-data-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.json/);
     });
 
     it('should generate filename with timestamp for CSV export', async () => {
       const user = userEvent.setup();
       render(<ExportPanel results={mockResults} />);
       
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
+      
       const csvButton = screen.getByText('CSV');
       await user.click(csvButton);
       
-      expect(mockElement.download).toMatch(/klv-data-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.csv/);
+      expect(domMocks.mocks.mockElement.download).toMatch(/klv-data-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.csv/);
     });
 
     it('should generate filename with timestamp for Table export', async () => {
       const user = userEvent.setup();
       render(<ExportPanel results={mockResults} />);
       
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
+      
       const tableButton = screen.getByText('Table');
       await user.click(tableButton);
       
-      expect(mockElement.download).toMatch(/klv-data-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.txt/);
+      expect(domMocks.mocks.mockElement.download).toMatch(/klv-data-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}\.txt/);
     });
 
     it('should set correct href for download link', async () => {
       const user = userEvent.setup();
       render(<ExportPanel results={mockResults} />);
       
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
+      
       const jsonButton = screen.getByText('JSON');
       await user.click(jsonButton);
       
-      expect(mockElement.href).toBe(mockObjectURL);
+      expect(domMocks.mocks.mockElement.href).toBe('mock-blob-url');
     });
   });
 
@@ -216,12 +207,16 @@ describe('ExportPanel', () => {
       const user = userEvent.setup();
       render(<ExportPanel results={mockResults} />);
       
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
+      
       const jsonButton = screen.getByText('JSON');
       await user.click(jsonButton);
       
-      expect(mockAppendChild).toHaveBeenCalledWith(mockElement);
-      expect(mockRemoveChild).toHaveBeenCalledWith(mockElement);
-      expect(mockRevokeObjectURL).toHaveBeenCalledWith(mockObjectURL);
+      expect(domMocks.mocks.mockAppendChild).toHaveBeenCalledWith(domMocks.mocks.mockElement);
+      expect(domMocks.mocks.mockRemoveChild).toHaveBeenCalledWith(domMocks.mocks.mockElement);
+      expect(urlMocks.mockRevokeObjectURL).toHaveBeenCalledWith('mock-blob-url');
     });
   });
 
@@ -240,11 +235,15 @@ describe('ExportPanel', () => {
       const user = userEvent.setup();
       render(<ExportPanel results={emptyResults} />);
       
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
+      
       const jsonButton = screen.getByText('JSON');
       await user.click(jsonButton);
       
       expect(global.Blob).toHaveBeenCalled();
-      expect(mockClick).toHaveBeenCalled();
+      expect(domMocks.mocks.mockClick).toHaveBeenCalled();
     });
 
     it('should handle special characters in values', async () => {
@@ -261,6 +260,10 @@ describe('ExportPanel', () => {
       const user = userEvent.setup();
       render(<ExportPanel results={specialResults} />);
       
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
+      
       const csvButton = screen.getByText('CSV');
       await user.click(csvButton);
       
@@ -268,6 +271,7 @@ describe('ExportPanel', () => {
         [expect.stringContaining('Test"Value,')],
         { type: 'text/csv' }
       );
+      expect(domMocks.mocks.mockClick).toHaveBeenCalled();
     });
   });
 
@@ -302,6 +306,10 @@ describe('ExportPanel', () => {
       
       const user = userEvent.setup();
       render(<ExportPanel results={mixedResults} />);
+      
+      // Set up mocks after rendering
+      domMocks = mockDOMFileDownload();
+      urlMocks = mockURLAPIs();
       
       const tableButton = screen.getByText('Table');
       await user.click(tableButton);

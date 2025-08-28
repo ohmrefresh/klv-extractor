@@ -8,3 +8,7 @@ import '@testing-library/jest-dom';
 const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
+
+// Ensure proper DOM setup for React Testing Library
+import { configure } from '@testing-library/react';
+configure({ testIdAttribute: 'data-testid' });

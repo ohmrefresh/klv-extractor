@@ -2,6 +2,7 @@
   "name": "klv-extractor",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://ohmrefresh.github.io/klv-extractor",
   "dependencies": {
     "lucide-react": "^0.263.1",
     "react": "^18.2.0",
@@ -17,6 +18,7 @@
     "@types/node": "^24.3.0",
     "@types/react": "^19.1.11",
     "@types/react-dom": "^19.1.8",
+    "gh-pages": "^6.3.0",
     "jsdom": "^26.1.0",
     "react-scripts": "5.0.1",
     "tailwindcss": "^3.3.0",
@@ -28,7 +30,9 @@
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --coverage --watchAll=false",
     "test:ci": "react-scripts test --coverage --watchAll=false --ci",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
