@@ -307,4 +307,63 @@ describe('KLVParser', () => {
       expect(uniqueValues.size).toBe(values.length);
     });
   });
+
+  describe('currency mapping', () => {
+    it('should format USD currency code correctly', () => {
+      const result = KLVParser.formatCurrency('840', '049');
+      expect(result).not.toBeNull();
+      expect(result?.formattedValue).toBe('🇺🇸 USD - US Dollar');
+      expect(result?.currencyInfo?.code).toBe('USD');
+      expect(result?.currencyInfo?.name).toBe('US Dollar');
+      expect(result?.currencyInfo?.flag).toBe('🇺🇸');
+    });
+
+    it('should format EUR currency code correctly', () => {
+      const result = KLVParser.formatCurrency('978', '049');
+      expect(result).not.toBeNull();
+      expect(result?.formattedValue).toBe('🇪🇺 EUR - Euro');
+      expect(result?.currencyInfo?.code).toBe('EUR');
+    });
+
+    it('should handle currency codes with leading zeros', () => {
+      const result = KLVParser.formatCurrency('36', '049');
+      expect(result).not.toBeNull();
+      expect(result?.formattedValue).toBe('🇦🇺 AUD - Australian Dollar');
+    });
+
+    it('should return null for non-currency fields', () => {
+      const result = KLVParser.formatCurrency('840', '002');
+      expect(result).toBeNull();
+    });
+
+    it('should handle unknown currency codes', () => {
+      const result = KLVParser.formatCurrency('999', '049');
+      expect(result).not.toBeNull();
+      expect(result?.formattedValue).toBe('999 (Unknown Currency Code)');
+      expect(result?.currencyInfo).toBeUndefined();
+    });
+
+    it('should integrate currency formatting in parse function', () => {
+      const klvWithCurrency = '04903840'; // Original Currency Code = 840 (USD)
+      const result = KLVParser.parse(klvWithCurrency);
+      
+      expect(result.results).toHaveLength(1);
+      expect(result.results[0].key).toBe('049');
+      expect(result.results[0].value).toBe('840');
+      expect(result.results[0].formattedValue).toBe('🇺🇸 USD - US Dollar');
+      expect(result.results[0].currencyInfo?.code).toBe('USD');
+      expect(result.results[0].name).toBe('Original Currency Code');
+    });
+
+    it('should have comprehensive currency mapping', () => {
+      const mappingKeys = Object.keys(KLVParser.currencyMapping);
+      expect(mappingKeys.length).toBeGreaterThan(50); // Should have over 50 currencies
+      
+      // Check some key currencies exist
+      expect(KLVParser.currencyMapping['840']).toBeDefined(); // USD
+      expect(KLVParser.currencyMapping['978']).toBeDefined(); // EUR
+      expect(KLVParser.currencyMapping['826']).toBeDefined(); // GBP
+      expect(KLVParser.currencyMapping['392']).toBeDefined(); // JPY
+    });
+  });
 });

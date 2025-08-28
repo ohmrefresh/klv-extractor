@@ -295,7 +295,14 @@ const App: React.FC = () => {
                                   Value
                                 </label>
                                 <div className="bg-gray-50 border p-3 rounded font-mono text-sm break-all text-gray-800">
-                                  {item.value || <span className="text-gray-400 italic">Empty</span>}
+                                  {item.formattedValue ? (
+                                    <div>
+                                      <div className="mb-1 font-medium text-blue-700">{item.formattedValue}</div>
+                                      <div className="text-xs text-gray-500">Raw: {item.value}</div>
+                                    </div>
+                                  ) : (
+                                    item.value || <span className="text-gray-400 italic">Empty</span>
+                                  )}
                                 </div>
                               </div>
                             </div>
