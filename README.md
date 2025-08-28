@@ -1,6 +1,10 @@
 # KLV Extractor
 
-A React-based KLV (Key-Length-Value) data extraction and processing suite for transaction data. This application provides a complete toolkit for parsing, building, and batch processing KLV formatted data.
+[![Deployment Status](https://github.com/ohmrefresh/klv-extractor/actions/workflows/deploy.yml/badge.svg)](https://github.com/ohmrefresh/klv-extractor/actions/workflows/deploy.yml)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://ohmrefresh.github.io/klv-extractor)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue)](https://github.com/ohmrefresh/klv-extractor)
+
+A React-based KLV (Key-Length-Value) data extraction and processing suite for Paymentology transaction data. This application provides a complete toolkit for parsing, building, and batch processing KLV formatted data with comprehensive field definitions and export capabilities.
 
 ## Features
 
@@ -24,7 +28,7 @@ A React-based KLV (Key-Length-Value) data extraction and processing suite for tr
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
+git clone https://github.com/ohmrefresh/klv-extractor.git
 cd klv-extractor
 ```
 
@@ -40,6 +44,10 @@ npm start
 
 The application will open in your browser at [http://localhost:3000](http://localhost:3000).
 
+### Live Demo
+
+You can try the application without installing it locally at: [https://ohmrefresh.github.io/klv-extractor](https://ohmrefresh.github.io/klv-extractor)
+
 ## Available Scripts
 
 ### Development
@@ -50,6 +58,10 @@ The application will open in your browser at [http://localhost:3000](http://loca
 - `npm test` - Launches the test runner in interactive watch mode
 - `npm run test:coverage` - Runs all tests with coverage report
 - `npm run test:ci` - Runs tests in CI mode with coverage (no watch)
+
+### Deployment
+- `npm run deploy` - Deploy to GitHub Pages
+- `npm run predeploy` - Pre-deployment build step
 
 ### Other
 - `npm run eject` - One-way operation to eject from Create React App
@@ -93,11 +105,12 @@ The application processes Key-Length-Value data with the structure:
 
 ## Technology Stack
 
-- **React 18** with TypeScript for type safety
-- **Tailwind CSS** for styling
-- **Lucide React** for icons
-- **Create React App** build system
-- **Jest** and **React Testing Library** for testing
+- **React 18** with TypeScript for type safety and modern React features
+- **Tailwind CSS** for utility-first styling and responsive design
+- **Lucide React** for consistent and modern iconography
+- **Create React App** build system with optimized production builds
+- **Jest** and **React Testing Library** for comprehensive testing
+- **GitHub Pages** for automated deployment and hosting
 
 ## Architecture
 
