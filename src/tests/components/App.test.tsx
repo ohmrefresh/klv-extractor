@@ -113,7 +113,7 @@ describe('App Integration Tests', () => {
       expect(screen.getByText('Key 002')).toBeInTheDocument();
       expect(screen.getByText('Key 026')).toBeInTheDocument();
       expect(screen.getByText('AB48DE')).toBeInTheDocument();
-      expect(screen.getByText('4577')).toBeInTheDocument();
+      expect(screen.getByText('4577 (Unknown MCC)')).toBeInTheDocument();
     });
 
     it('should update results when KLV input changes', async () => {
