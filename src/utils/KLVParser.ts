@@ -9,6 +9,12 @@ export interface KLVEntry {
   value: string;
   pos: number;
   name: string;
+  formattedValue?: string;
+  currencyInfo?: {
+    code: string;
+    name: string;
+    flag: string;
+  };
 }
 
 export interface KLVParseResult {
@@ -146,6 +152,127 @@ const KLVParser = {
   } as const,
 
   /**
+   * ISO 4217 Currency Codes mapping to currency names and country flags
+   * Based on https://www.iban.com/currency-codes
+   */
+  currencyMapping: {
+    // Major currencies
+    '840': { name: 'US Dollar', code: 'USD', flag: '🇺🇸' },
+    '978': { name: 'Euro', code: 'EUR', flag: '🇪🇺' },
+    '826': { name: 'Pound Sterling', code: 'GBP', flag: '🇬🇧' },
+    '392': { name: 'Japanese Yen', code: 'JPY', flag: '🇯🇵' },
+    '756': { name: 'Swiss Franc', code: 'CHF', flag: '🇨🇭' },
+    '124': { name: 'Canadian Dollar', code: 'CAD', flag: '🇨🇦' },
+    '036': { name: 'Australian Dollar', code: 'AUD', flag: '🇦🇺' },
+    '554': { name: 'New Zealand Dollar', code: 'NZD', flag: '🇳🇿' },
+    '156': { name: 'Chinese Yuan', code: 'CNY', flag: '🇨🇳' },
+    '356': { name: 'Indian Rupee', code: 'INR', flag: '🇮🇳' },
+    
+    // European currencies
+    '752': { name: 'Swedish Krona', code: 'SEK', flag: '🇸🇪' },
+    '578': { name: 'Norwegian Krone', code: 'NOK', flag: '🇳🇴' },
+    '208': { name: 'Danish Krone', code: 'DKK', flag: '🇩🇰' },
+    '985': { name: 'Polish Zloty', code: 'PLN', flag: '🇵🇱' },
+    '203': { name: 'Czech Koruna', code: 'CZK', flag: '🇨🇿' },
+    '348': { name: 'Hungarian Forint', code: 'HUF', flag: '🇭🇺' },
+    '946': { name: 'Romanian Leu', code: 'RON', flag: '🇷🇴' },
+    '975': { name: 'Bulgarian Lev', code: 'BGN', flag: '🇧🇬' },
+    '191': { name: 'Croatian Kuna', code: 'HRK', flag: '🇭🇷' },
+    '941': { name: 'Serbian Dinar', code: 'RSD', flag: '🇷🇸' },
+    
+    // Asia Pacific
+    '702': { name: 'Singapore Dollar', code: 'SGD', flag: '🇸🇬' },
+    '344': { name: 'Hong Kong Dollar', code: 'HKD', flag: '🇭🇰' },
+    '410': { name: 'Korean Won', code: 'KRW', flag: '🇰🇷' },
+    '764': { name: 'Thai Baht', code: 'THB', flag: '🇹🇭' },
+    '458': { name: 'Malaysian Ringgit', code: 'MYR', flag: '🇲🇾' },
+    '360': { name: 'Indonesian Rupiah', code: 'IDR', flag: '🇮🇩' },
+    '608': { name: 'Philippine Peso', code: 'PHP', flag: '🇵🇭' },
+    '704': { name: 'Vietnamese Dong', code: 'VND', flag: '🇻🇳' },
+    '096': { name: 'Brunei Dollar', code: 'BND', flag: '🇧🇳' },
+    
+    // Americas
+    '484': { name: 'Mexican Peso', code: 'MXN', flag: '🇲🇽' },
+    '986': { name: 'Brazilian Real', code: 'BRL', flag: '🇧🇷' },
+    '032': { name: 'Argentine Peso', code: 'ARS', flag: '🇦🇷' },
+    '152': { name: 'Chilean Peso', code: 'CLP', flag: '🇨🇱' },
+    '604': { name: 'Peruvian Sol', code: 'PEN', flag: '🇵🇪' },
+    '170': { name: 'Colombian Peso', code: 'COP', flag: '🇨🇴' },
+    '858': { name: 'Uruguayan Peso', code: 'UYU', flag: '🇺🇾' },
+    '600': { name: 'Paraguayan Guarani', code: 'PYG', flag: '🇵🇾' },
+    '068': { name: 'Bolivian Boliviano', code: 'BOB', flag: '🇧🇴' },
+    '218': { name: 'Ecuadorian Sucre', code: 'ECS', flag: '🇪🇨' },
+    
+    // Middle East & Africa
+    '784': { name: 'UAE Dirham', code: 'AED', flag: '🇦🇪' },
+    '682': { name: 'Saudi Riyal', code: 'SAR', flag: '🇸🇦' },
+    '376': { name: 'Israeli New Shekel', code: 'ILS', flag: '🇮🇱' },
+    '818': { name: 'Egyptian Pound', code: 'EGP', flag: '🇪🇬' },
+    '710': { name: 'South African Rand', code: 'ZAR', flag: '🇿🇦' },
+    '566': { name: 'Nigerian Naira', code: 'NGN', flag: '🇳🇬' },
+    '404': { name: 'Kenyan Shilling', code: 'KES', flag: '🇰🇪' },
+    '788': { name: 'Tunisian Dinar', code: 'TND', flag: '🇹🇳' },
+    '504': { name: 'Moroccan Dirham', code: 'MAD', flag: '🇲🇦' },
+    '012': { name: 'Algerian Dinar', code: 'DZD', flag: '🇩🇿' },
+    
+    // Eastern Europe & CIS
+    '643': { name: 'Russian Ruble', code: 'RUB', flag: '🇷🇺' },
+    '980': { name: 'Ukrainian Hryvnia', code: 'UAH', flag: '🇺🇦' },
+    '398': { name: 'Kazakhstani Tenge', code: 'KZT', flag: '🇰🇿' },
+    '051': { name: 'Armenian Dram', code: 'AMD', flag: '🇦🇲' },
+    '031': { name: 'Azerbaijani Manat', code: 'AZN', flag: '🇦🇿' },
+    '934': { name: 'Turkmenistani Manat', code: 'TMT', flag: '🇹🇲' },
+    '860': { name: 'Uzbekistani Som', code: 'UZS', flag: '🇺🇿' },
+    '417': { name: 'Kyrgyzstani Som', code: 'KGS', flag: '🇰🇬' },
+    '972': { name: 'Tajikistani Somoni', code: 'TJS', flag: '🇹🇯' },
+    
+    // Additional major currencies
+    '949': { name: 'Turkish Lira', code: 'TRY', flag: '🇹🇷' },
+    '364': { name: 'Iranian Rial', code: 'IRR', flag: '🇮🇷' },
+    '368': { name: 'Iraqi Dinar', code: 'IQD', flag: '🇮🇶' },
+    '414': { name: 'Kuwaiti Dinar', code: 'KWD', flag: '🇰🇼' },
+    '048': { name: 'Bahraini Dinar', code: 'BHD', flag: '🇧🇭' },
+    '634': { name: 'Qatari Rial', code: 'QAR', flag: '🇶🇦' },
+    '512': { name: 'Omani Rial', code: 'OMR', flag: '🇴🇲' },
+    '422': { name: 'Lebanese Pound', code: 'LBP', flag: '🇱🇧' },
+    '400': { name: 'Jordanian Dinar', code: 'JOD', flag: '🇯🇴' }
+  } as const,
+
+  /**
+   * Format currency value with currency name and flag
+   * @param value - The currency code value (ISO 4217 numeric code)
+   * @param key - The KLV key to determine if it's a currency field
+   * @returns Formatted currency information or null if not a currency field
+   */
+  formatCurrency(value: string, key: string): { formattedValue: string; currencyInfo?: { code: string; name: string; flag: string; } } | null {
+    // Check if this is the Original Currency Code field (key 049)
+    if (key !== '049') {
+      return null;
+    }
+
+    // Pad the value to 3 digits if needed (some currency codes might be shorter)
+    const paddedValue = value.padStart(3, '0');
+    const currency = this.currencyMapping[paddedValue as keyof typeof this.currencyMapping];
+    
+    if (currency) {
+      return {
+        formattedValue: `${currency.flag} ${currency.code} - ${currency.name}`,
+        currencyInfo: {
+          code: currency.code,
+          name: currency.name,
+          flag: currency.flag
+        }
+      };
+    }
+    
+    // If currency not found, still show the original value with indication
+    return {
+      formattedValue: `${value} (Unknown Currency Code)`,
+      currencyInfo: undefined
+    };
+  },
+
+  /**
    * Parse KLV string into individual components
    * @param klvString - The KLV data string to parse
    * @returns Object containing results and errors
@@ -179,13 +306,24 @@ const KLVParser = {
       }
 
       const value = clean.substring(pos + 5, pos + 5 + len);
-      results.push({ 
+      
+      // Create base entry
+      const entry: KLVEntry = { 
         key, 
         len, 
         value, 
         pos, 
         name: KLVParser.definitions[key as keyof typeof KLVParser.definitions] || 'Unknown' 
-      });
+      };
+
+      // Add currency formatting if applicable
+      const currencyFormat = KLVParser.formatCurrency(value, key);
+      if (currencyFormat) {
+        entry.formattedValue = currencyFormat.formattedValue;
+        entry.currencyInfo = currencyFormat.currencyInfo;
+      }
+
+      results.push(entry);
       pos = valEnd;
     }
 
