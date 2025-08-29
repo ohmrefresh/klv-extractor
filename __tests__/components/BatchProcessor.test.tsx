@@ -193,7 +193,7 @@ describe('BatchProcessor Component', () => {
     jest.advanceTimersByTime(500);
 
     await waitFor(() => {
-      const resultContainer = screen.getByText('Line 1').closest('div');
+      const resultContainer = screen.getByText('Line 1').closest('.border.rounded.p-3');
       expect(resultContainer).toHaveClass('bg-green-50', 'border-green-200');
     });
   });
@@ -213,7 +213,7 @@ describe('BatchProcessor Component', () => {
     jest.advanceTimersByTime(500);
 
     await waitFor(() => {
-      const resultContainer = screen.getByText('Line 1').closest('div');
+      const resultContainer = screen.getByText('Line 1').closest('.border.rounded.p-3');
       expect(resultContainer).toHaveClass('bg-red-50', 'border-red-200');
     });
   });
@@ -322,6 +322,6 @@ describe('BatchProcessor Component', () => {
     // Should show processing state
     expect(screen.getByText('Processing...')).toBeInTheDocument();
     expect(processButton).toBeDisabled();
-    expect(screen.getByText('Processing...').previousSibling).toHaveClass('animate-spin');
+    expect(screen.getByText('Processing...').parentElement?.querySelector('.animate-spin')).toBeInTheDocument();
   });
 });

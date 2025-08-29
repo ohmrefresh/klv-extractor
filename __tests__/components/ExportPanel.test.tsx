@@ -35,6 +35,7 @@ describe('ExportPanel Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
+    
     // Mock URL methods
     global.URL.createObjectURL = jest.fn(() => 'mock-url');
     global.URL.revokeObjectURL = jest.fn();
@@ -45,31 +46,42 @@ describe('ExportPanel Component', () => {
       options
     })) as any;
     
-    // Mock document.createElement to return a proper mock element
-    Object.defineProperty(document, 'createElement', {
-      value: jest.fn((tagName) => {
-        if (tagName === 'a') {
-          return {
-            href: '',
-            download: '',
-            click: jest.fn(),
-            style: {}
-          };
-        }
-        // Return a generic mock for other elements
+    // Only mock document.createElement for 'a' elements, let others work normally
+    const originalCreateElement = document.createElement.bind(document);
+    document.createElement = jest.fn((tagName) => {
+      if (tagName === 'a') {
         return {
-          appendChild: jest.fn(),
-          removeChild: jest.fn(),
-          setAttribute: jest.fn(),
+          href: '',
+          download: '',
+          click: jest.fn(),
           style: {}
         };
-      }),
-      writable: true
+      }
+      // Use the original createElement for other elements
+      return originalCreateElement(tagName);
     });
     
-    // Mock document.body methods
-    document.body.appendChild = jest.fn();
-    document.body.removeChild = jest.fn();
+    // Mock document.body methods only for test purposes, preserve original functionality
+    const originalAppendChild = document.body.appendChild.bind(document.body);
+    const originalRemoveChild = document.body.removeChild.bind(document.body);
+    
+    document.body.appendChild = jest.fn((node) => {
+      // If it's our mock anchor element, just return it
+      if (node && typeof node === 'object' && 'click' in node && typeof node.click === 'function') {
+        return node;
+      }
+      // Otherwise, use the original functionality
+      return originalAppendChild(node);
+    });
+    
+    document.body.removeChild = jest.fn((node) => {
+      // If it's our mock anchor element, just return it
+      if (node && typeof node === 'object' && 'click' in node && typeof node.click === 'function') {
+        return node;
+      }
+      // Otherwise, use the original functionality  
+      return originalRemoveChild(node);
+    });
   });
 
   it('renders nothing when no results provided', () => {
@@ -78,19 +90,19 @@ describe('ExportPanel Component', () => {
   });
 
   it('renders export buttons when results are provided', () => {
-    render(<ExportPanel results={mockResults} />);
+    const { container } = render(<ExportPanel results={mockResults} />);
 
-    expect(screen.getByText('JSON')).toBeInTheDocument();
-    expect(screen.getByText('CSV')).toBeInTheDocument();
-    expect(screen.getByText('Table')).toBeInTheDocument();
+    expect(container.textContent).toContain('JSON');
+    expect(container.textContent).toContain('CSV');
+    expect(container.textContent).toContain('Table');
   });
 
   it('has correct button styling', () => {
-    render(<ExportPanel results={mockResults} />);
+    const { container } = render(<ExportPanel results={mockResults} />);
 
-    const jsonButton = screen.getByText('JSON');
-    const csvButton = screen.getByText('CSV');
-    const tableButton = screen.getByText('Table');
+    const jsonButton = container.querySelector('button[title="Export as JSON"]');
+    const csvButton = container.querySelector('button[title="Export as CSV"]');
+    const tableButton = container.querySelector('button[title="Export as Table"]');
 
     expect(jsonButton).toHaveClass('px-3', 'py-1', 'bg-green-100', 'text-green-800', 'rounded', 'text-sm');
     expect(csvButton).toHaveClass('px-3', 'py-1', 'bg-blue-100', 'text-blue-800', 'rounded', 'text-sm');
@@ -98,21 +110,21 @@ describe('ExportPanel Component', () => {
   });
 
   it('has correct button titles', () => {
-    render(<ExportPanel results={mockResults} />);
+    const { container } = render(<ExportPanel results={mockResults} />);
 
-    expect(screen.getByTitle('Export as JSON')).toBeInTheDocument();
-    expect(screen.getByTitle('Export as CSV')).toBeInTheDocument();
-    expect(screen.getByTitle('Export as Table')).toBeInTheDocument();
+    expect(container.querySelector('button[title="Export as JSON"]')).toBeTruthy();
+    expect(container.querySelector('button[title="Export as CSV"]')).toBeTruthy();
+    expect(container.querySelector('button[title="Export as Table"]')).toBeTruthy();
   });
 
   it('calls KLVParser.export and triggers download for JSON', () => {
     const mockJsonData = JSON.stringify(mockResults);
     mockKLVParser.export.mockReturnValue(mockJsonData);
 
-    render(<ExportPanel results={mockResults} />);
+    const { container } = render(<ExportPanel results={mockResults} />);
     
-    const jsonButton = screen.getByText('JSON');
-    fireEvent.click(jsonButton);
+    const jsonButton = container.querySelector('button[title="Export as JSON"]');
+    fireEvent.click(jsonButton!);
 
     expect(mockKLVParser.export).toHaveBeenCalledWith(mockResults, 'json');
     expect(global.URL.createObjectURL).toHaveBeenCalled();
@@ -126,10 +138,10 @@ describe('ExportPanel Component', () => {
     const mockCsvData = 'Key,Name,Length,Value,Position\n002,Tracking Number,6,AB48DE,0';
     mockKLVParser.export.mockReturnValue(mockCsvData);
 
-    render(<ExportPanel results={mockResults} />);
+    const { container } = render(<ExportPanel results={mockResults} />);
     
-    const csvButton = screen.getByText('CSV');
-    fireEvent.click(csvButton);
+    const csvButton = container.querySelector('button[title="Export as CSV"]');
+    fireEvent.click(csvButton!);
 
     expect(mockKLVParser.export).toHaveBeenCalledWith(mockResults, 'csv');
     expect(global.URL.createObjectURL).toHaveBeenCalled();
@@ -140,10 +152,10 @@ describe('ExportPanel Component', () => {
     const mockTableData = 'Key    Name              Length  Value   Position\n002    Tracking Number   6       AB48DE  0';
     mockKLVParser.export.mockReturnValue(mockTableData);
 
-    render(<ExportPanel results={mockResults} />);
+    const { container } = render(<ExportPanel results={mockResults} />);
     
-    const tableButton = screen.getByText('Table');
-    fireEvent.click(tableButton);
+    const tableButton = container.querySelector('button[title="Export as Table"]');
+    fireEvent.click(tableButton!);
 
     expect(mockKLVParser.export).toHaveBeenCalledWith(mockResults, 'table');
     expect(global.URL.createObjectURL).toHaveBeenCalled();
@@ -154,8 +166,8 @@ describe('ExportPanel Component', () => {
     const mockJsonData = JSON.stringify(mockResults);
     mockKLVParser.export.mockReturnValue(mockJsonData);
 
-    render(<ExportPanel results={mockResults} />);
-    fireEvent.click(screen.getByText('JSON'));
+    const { container } = render(<ExportPanel results={mockResults} />);
+    fireEvent.click(container.querySelector('button[title="Export as JSON"]')!);
 
     expect(global.Blob).toHaveBeenCalledWith([mockJsonData], { type: 'application/json' });
   });
@@ -164,8 +176,8 @@ describe('ExportPanel Component', () => {
     const mockCsvData = 'csv,data';
     mockKLVParser.export.mockReturnValue(mockCsvData);
 
-    render(<ExportPanel results={mockResults} />);
-    fireEvent.click(screen.getByText('CSV'));
+    const { container } = render(<ExportPanel results={mockResults} />);
+    fireEvent.click(container.querySelector('button[title="Export as CSV"]')!);
 
     expect(global.Blob).toHaveBeenCalledWith([mockCsvData], { type: 'text/csv' });
   });
@@ -174,8 +186,8 @@ describe('ExportPanel Component', () => {
     const mockTableData = 'table data';
     mockKLVParser.export.mockReturnValue(mockTableData);
 
-    render(<ExportPanel results={mockResults} />);
-    fireEvent.click(screen.getByText('Table'));
+    const { container } = render(<ExportPanel results={mockResults} />);
+    fireEvent.click(container.querySelector('button[title="Export as Table"]')!);
 
     expect(global.Blob).toHaveBeenCalledWith([mockTableData], { type: 'text/plain' });
   });
@@ -184,8 +196,8 @@ describe('ExportPanel Component', () => {
     const mockJsonData = JSON.stringify(mockResults);
     mockKLVParser.export.mockReturnValue(mockJsonData);
 
-    render(<ExportPanel results={mockResults} />);
-    fireEvent.click(screen.getByText('JSON'));
+    const { container } = render(<ExportPanel results={mockResults} />);
+    fireEvent.click(container.querySelector('button[title="Export as JSON"]')!);
 
     expect(mockKLVParser.export).toHaveBeenCalledWith(mockResults, 'json');
     expect(global.URL.createObjectURL).toHaveBeenCalled();
@@ -195,13 +207,13 @@ describe('ExportPanel Component', () => {
     const singleResult = [mockResults[0]];
     mockKLVParser.export.mockReturnValue('single result data');
 
-    render(<ExportPanel results={singleResult} />);
+    const { container } = render(<ExportPanel results={singleResult} />);
     
-    expect(screen.getByText('JSON')).toBeInTheDocument();
-    expect(screen.getByText('CSV')).toBeInTheDocument();
-    expect(screen.getByText('Table')).toBeInTheDocument();
+    expect(container.textContent).toContain('JSON');
+    expect(container.textContent).toContain('CSV');
+    expect(container.textContent).toContain('Table');
 
-    fireEvent.click(screen.getByText('JSON'));
+    fireEvent.click(container.querySelector('button[title="Export as JSON"]')!);
     expect(mockKLVParser.export).toHaveBeenCalledWith(singleResult, 'json');
   });
 });

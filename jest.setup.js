@@ -7,8 +7,8 @@ global.TextDecoder = TextDecoder;
 
 // Setup proper container for React Testing Library to avoid "Target container is not a DOM element" error
 beforeEach(() => {
-  // Clear the document
-  document.body.innerHTML = '<div id="root"></div>';
+  // Clear the document body completely
+  document.body.innerHTML = '';
 });
 
 afterEach(() => {
