@@ -53,10 +53,10 @@ describe('Statistics Component', () => {
 
     render(<Statistics results={results} />);
 
-    expect(screen.getByText('Total Entries').previousSibling).toHaveTextContent('3');
-    expect(screen.getByText('Known Keys').previousSibling).toHaveTextContent('3');
-    expect(screen.getByText('Unknown Keys').previousSibling).toHaveTextContent('0');
-    expect(screen.getByText('Total Length').previousSibling).toHaveTextContent('12');
+    expect(screen.getByText('Total Entries').parentElement?.querySelector('.text-2xl')).toHaveTextContent('3');
+    expect(screen.getByText('Known Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('3');
+    expect(screen.getByText('Unknown Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('0');
+    expect(screen.getByText('Total Length').parentElement?.querySelector('.text-2xl')).toHaveTextContent('12');
   });
 
   it('handles all unknown keys correctly', () => {
@@ -68,10 +68,10 @@ describe('Statistics Component', () => {
 
     render(<Statistics results={results} />);
 
-    expect(screen.getByText('Total Entries').previousSibling).toHaveTextContent('3');
-    expect(screen.getByText('Known Keys').previousSibling).toHaveTextContent('0');
-    expect(screen.getByText('Unknown Keys').previousSibling).toHaveTextContent('3');
-    expect(screen.getByText('Total Length').previousSibling).toHaveTextContent('10');
+    expect(screen.getByText('Total Entries').parentElement?.querySelector('.text-2xl')).toHaveTextContent('3');
+    expect(screen.getByText('Known Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('0');
+    expect(screen.getByText('Unknown Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('3');
+    expect(screen.getByText('Total Length').parentElement?.querySelector('.text-2xl')).toHaveTextContent('10');
   });
 
   it('handles single entry correctly', () => {
@@ -81,10 +81,10 @@ describe('Statistics Component', () => {
 
     render(<Statistics results={results} />);
 
-    expect(screen.getByText('Total Entries').previousSibling).toHaveTextContent('1');
-    expect(screen.getByText('Known Keys').previousSibling).toHaveTextContent('1');
-    expect(screen.getByText('Unknown Keys').previousSibling).toHaveTextContent('0');
-    expect(screen.getByText('Total Length').previousSibling).toHaveTextContent('8');
+    expect(screen.getByText('Total Entries').parentElement?.querySelector('.text-2xl')).toHaveTextContent('1');
+    expect(screen.getByText('Known Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('1');
+    expect(screen.getByText('Unknown Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('0');
+    expect(screen.getByText('Total Length').parentElement?.querySelector('.text-2xl')).toHaveTextContent('8');
   });
 
   it('handles entries with zero length', () => {
@@ -95,10 +95,10 @@ describe('Statistics Component', () => {
 
     render(<Statistics results={results} />);
 
-    expect(screen.getByText('Total Entries').previousSibling).toHaveTextContent('2');
-    expect(screen.getByText('Known Keys').previousSibling).toHaveTextContent('2');
-    expect(screen.getByText('Unknown Keys').previousSibling).toHaveTextContent('0');
-    expect(screen.getByText('Total Length').previousSibling).toHaveTextContent('5');
+    expect(screen.getByText('Total Entries').parentElement?.querySelector('.text-2xl')).toHaveTextContent('2');
+    expect(screen.getByText('Known Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('2');
+    expect(screen.getByText('Unknown Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('0');
+    expect(screen.getByText('Total Length').parentElement?.querySelector('.text-2xl')).toHaveTextContent('5');
   });
 
   it('has correct styling classes', () => {
@@ -128,19 +128,19 @@ describe('Statistics Component', () => {
     render(<Statistics results={results} />);
 
     // Total entries should be blue
-    const totalValue = screen.getByText('Total Entries').previousSibling;
+    const totalValue = screen.getByText('Total Entries').parentElement?.querySelector('.text-2xl');
     expect(totalValue).toHaveClass('text-2xl', 'font-bold', 'text-blue-600');
 
     // Known keys should be green
-    const knownValue = screen.getByText('Known Keys').previousSibling;
+    const knownValue = screen.getByText('Known Keys').parentElement?.querySelector('.text-2xl');
     expect(knownValue).toHaveClass('text-2xl', 'font-bold', 'text-green-600');
 
     // Unknown keys should be yellow
-    const unknownValue = screen.getByText('Unknown Keys').previousSibling;
+    const unknownValue = screen.getByText('Unknown Keys').parentElement?.querySelector('.text-2xl');
     expect(unknownValue).toHaveClass('text-2xl', 'font-bold', 'text-yellow-600');
 
     // Total length should be purple
-    const lengthValue = screen.getByText('Total Length').previousSibling;
+    const lengthValue = screen.getByText('Total Length').parentElement?.querySelector('.text-2xl');
     expect(lengthValue).toHaveClass('text-2xl', 'font-bold', 'text-purple-600');
   });
 
@@ -156,15 +156,15 @@ describe('Statistics Component', () => {
     render(<Statistics results={results} />);
 
     // Total: 5 entries
-    expect(screen.getByText('Total Entries').previousSibling).toHaveTextContent('5');
+    expect(screen.getByText('Total Entries').parentElement?.querySelector('.text-2xl')).toHaveTextContent('5');
     
     // Known: 3 entries (002, 026, 032)
-    expect(screen.getByText('Known Keys').previousSibling).toHaveTextContent('3');
+    expect(screen.getByText('Known Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('3');
     
     // Unknown: 2 entries (999, 998)
-    expect(screen.getByText('Unknown Keys').previousSibling).toHaveTextContent('2');
+    expect(screen.getByText('Unknown Keys').parentElement?.querySelector('.text-2xl')).toHaveTextContent('2');
     
     // Total length: 10 + 5 + 3 + 7 + 2 = 27
-    expect(screen.getByText('Total Length').previousSibling).toHaveTextContent('27');
+    expect(screen.getByText('Total Length').parentElement?.querySelector('.text-2xl')).toHaveTextContent('27');
   });
 });
