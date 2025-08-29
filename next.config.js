@@ -1,12 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
-  trailingSlash: true,
+  trailingSlash: false,
   images: {
     unoptimized: true
   },
-  basePath: process.env.NODE_ENV === 'production' ? '/klv-extractor' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/klv-extractor/' : '',
+
+  // For static export, use relative paths to make it work when opened directly from file system
+  basePath: '',
+  assetPrefix: './',
   experimental: {
     optimizePackageImports: ['lucide-react']
   }

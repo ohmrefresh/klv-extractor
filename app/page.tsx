@@ -13,6 +13,10 @@ import BatchProcessor from '../components/BatchProcessor';
 // Import utilities
 import KLVParser, { KLVEntry } from '../utils/KLVParser';
 
+// Version information
+import packageJson from '../package.json';
+const APP_VERSION = packageJson.version;
+
 interface HistoryEntry {
   id: number;
   label: string;
@@ -111,12 +115,22 @@ const HomePage: React.FC = () => {
       <div className="max-w-6xl mx-auto p-4">
         {/* Header */}
         <div className="bg-white rounded-lg shadow mb-6 p-6">
-          <h1 className="text-3xl font-bold mb-2 text-gray-800">
-            KLV Data Extraction Suite
-          </h1>
-          <p className="text-gray-600">
-            Complete toolkit for KLV data processing, parsing, and analysis
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold mb-2 text-gray-800">
+                KLV Data Extraction Suite
+              </h1>
+              <p className="text-gray-600">
+                Complete toolkit for KLV data processing, parsing, and analysis
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-sm text-gray-500 mb-1">Version</div>
+              <div className="text-lg font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-md">
+                v{APP_VERSION}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Navigation Tabs */}
