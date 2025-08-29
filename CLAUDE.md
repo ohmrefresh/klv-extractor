@@ -4,22 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js-based KLV (Key-Length-Value) data extraction and processing suite for Paymentology transaction data. The application provides a complete toolkit for parsing, building, and batch processing KLV formatted data.
+This is a React-based KLV (Key-Length-Value) data extraction and processing suite for Paymentology transaction data. The application provides a complete toolkit for parsing, building, and batch processing KLV formatted data.
 
 ## Development Commands
 
-- `npm run dev` - Runs the app in development mode on http://localhost:3000
-- `npm run build` - Builds the app for production to the `out` folder (static export)
-- `npm start` - Serves the production build locally
-- `npm run lint` - Runs Next.js ESLint checks
-- `npm test` - Launches the Jest test runner
-- `npm run test:watch` - Runs tests in watch mode
+- `npm start` - Runs the app in development mode on http://localhost:3000
+- `npm run build` - Builds the app for production to the `build` folder  
+- `npm test` - Launches the test runner in interactive watch mode
 - `npm run test:coverage` - Runs all tests with coverage report
 - `npm run test:ci` - Runs tests in CI mode with coverage (no watch)
+- `npm run eject` - One-way operation to eject from Create React App
 
 ## Core Architecture
 
-### KLV Parser Engine (`utils/KLVParser.ts`)
+### KLV Parser Engine (`src/utils/KLVParser.ts`)
 The heart of the application is the KLVParser utility which:
 - Contains complete KLV definitions for 100+ Paymentology fields (keys 002-999)
 - Parses KLV strings with format validation and error handling
@@ -30,13 +28,12 @@ The heart of the application is the KLVParser utility which:
 ### Component Architecture
 The application uses a tab-based interface with four main sections:
 
-**Main App (`app/page.tsx`)**
+**Main App (`src/App.jsx`)**
 - Manages application state (activeTab, klvInput, searchTerm, history)
 - Handles file uploads and history management
 - Coordinates between different processing modes
-- Uses Next.js App Router with client-side interactivity
 
-**Core Components (in `components/` directory):**
+**Core Components:**
 - `FileUpload` - Handles file input for KLV data
 - `ExportPanel` - Provides export functionality to various formats
 - `Statistics` - Shows parsing statistics and data insights
@@ -61,13 +58,11 @@ The application uses a tab-based interface with four main sections:
 
 ## Technology Stack
 
-- **Next.js 15** with App Router and React Server Components
-- **React 19** with functional components and hooks
+- **React 18** with functional components and hooks
 - **TypeScript** for type safety and better development experience
-- **Tailwind CSS** for styling with PostCSS processing
+- **Tailwind CSS** for styling (included as dev dependency)
 - **Lucide React** for icons
-- **Jest** with React Testing Library for testing
-- **ESLint** with Next.js configuration for code quality
+- **Create React App** build system with standard ESLint config
 
 ## KLV Data Format
 
@@ -79,15 +74,13 @@ The application processes Key-Length-Value data with the structure:
 
 ## Development Notes
 
-- Uses Next.js App Router with client-side components marked with 'use client'
 - Components follow React functional patterns with hooks and TypeScript interfaces
-- State management is handled at the page level and passed down via typed props
+- State management is handled at the App level and passed down via typed props
 - Error handling is built into the parsing engine with proper type safety
 - The application uses TypeScript for compile-time type checking and better IDE support
 - All interfaces and types are properly defined for KLV data structures
 - The application is designed for defensive security (data parsing and analysis only)
-- Static export configuration for GitHub Pages deployment
-- Pure client-side processing with no server-side dependencies
+- No server-side dependencies - pure client-side processing
 
 ## TypeScript Interfaces
 
@@ -102,10 +95,10 @@ Key interfaces defined in the codebase:
 The application includes comprehensive unit and integration tests:
 
 ### Test Structure
-- **Unit tests** for KLV Parser utility (`__tests__/utils/KLVParser.test.ts`)
-- **Component tests** for React components (`__tests__/components/*.test.tsx`)
-- **Integration tests** for full application workflows (`__tests__/integration/*.test.tsx`)
-- **Test utilities** for mocking and shared test helpers (`__tests__/helpers/testUtils.ts`)
+- **Unit tests** for KLV Parser utility (`src/tests/utils/KLVParser.test.ts`)
+- **Component tests** for React components (`src/tests/components/*.test.tsx`)
+- **Integration tests** for full application workflows (`src/tests/integration/*.test.tsx`)
+- **Test utilities** for mocking and shared test helpers (`src/tests/helpers/testUtils.ts`)
 
 ### Test Coverage
 Tests cover:
@@ -121,15 +114,13 @@ Tests cover:
 
 ### Running Tests
 ```bash
-npm test                 # Runs Jest test runner
-npm run test:watch       # Interactive test runner with watch mode
-npm run test:coverage    # Tests with coverage report
-npm run test:ci          # CI-friendly test run
+npm test                 # Interactive test runner
+npm run test:coverage   # Tests with coverage report
+npm run test:ci         # CI-friendly test run
 ```
 
 ### Test Dependencies
-- Jest (test framework with Next.js integration)
+- Jest (test framework, included with Create React App)
 - React Testing Library (component testing)
 - @testing-library/jest-dom (DOM assertions)
 - @testing-library/user-event (user interaction simulation)
-- jest-environment-jsdom (browser-like testing environment)
