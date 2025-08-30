@@ -1,17 +1,15 @@
-'use client'
-
 import React, { useState, useMemo } from 'react';
 import { Search, Copy, Trash2, Eye, EyeOff, Info, Database, Settings, FileText } from 'lucide-react';
 
 // Import components
-import FileUpload from '../components/FileUpload';
-import ExportPanel from '../components/ExportPanel';
-import Statistics from '../components/Statistics';
-import KLVBuilder from '../components/KLVBuilder';
-import BatchProcessor from '../components/BatchProcessor';
+import FileUpload from './components/FileUpload';
+import ExportPanel from './components/ExportPanel';
+import Statistics from './components/Statistics';
+import KLVBuilder from './components/KLVBuilder';
+import BatchProcessor from './components/BatchProcessor';
 
 // Import utilities
-import KLVParser, { KLVEntry } from '../utils/KLVParser';
+import KLVParser, { KLVEntry } from './utils/KLVParser';
 
 // Version information
 import packageJson from '../package.json';
@@ -31,12 +29,19 @@ interface Tab {
   icon: React.ComponentType<{ size?: number }>;
 }
 
+interface BatchResult {
+  line: number;
+  input: string;
+  results: KLVEntry[];
+  errors: string[];
+}
 
-const HomePage: React.FC = () => {
+const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('extractor');
   const [klvInput, setKlvInput] = useState<string>('00206AB48DE026044577');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showRaw, setShowRaw] = useState<boolean>(false);
+  const [, setBatchResults] = useState<BatchResult[]>([]);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
   // Parse KLV data
@@ -91,8 +96,8 @@ const HomePage: React.FC = () => {
     setActiveTab('extractor');
   };
 
-  const handleBatchProcess = () => {
-    // Batch results are handled within the BatchProcessor component
+  const handleBatchProcess = (results: BatchResult[]) => {
+    setBatchResults(results);
   };
 
   const handleBuilderResult = (klvString: string) => {
@@ -323,7 +328,7 @@ const HomePage: React.FC = () => {
                           <div className="text-center py-12">
                             <Search className="mx-auto mb-4 text-gray-300" size={48} />
                             <div className="text-gray-500">
-                              No entries match &quot;{searchTerm}&quot;
+                              No entries match "{searchTerm}"
                             </div>
                             <button
                               onClick={() => setSearchTerm('')}
@@ -459,4 +464,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default App;
