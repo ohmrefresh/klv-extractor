@@ -2,8 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(npm test:*)",
-      "Bash(npm run test:ci:*)",
-      "Bash(npm install:*)"
+      "Bash(npm run test:ci:*)"
     ],
     "deny": [],
     "ask": []
