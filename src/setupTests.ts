@@ -15,3 +15,13 @@ if (typeof global.TextEncoder === 'undefined') {
 
 // Ensure proper DOM setup for React Testing Library
 configure({ testIdAttribute: 'data-testid' });
+
+// Mock window.alert for tests
+global.alert = vi.fn();
+
+// Mock window.navigator.clipboard for tests
+Object.assign(navigator, {
+  clipboard: {
+    writeText: vi.fn(() => Promise.resolve()),
+  },
+});

@@ -16,10 +16,10 @@ describe('App Integration Tests', () => {
   describe('Initial Rendering', () => {
     it('should render the main app with header and navigation', () => {
       render(<App />);
-      
-      expect(screen.getByText('KLV Data Extraction Suite')).toBeInTheDocument();
-      expect(screen.getByText('Complete toolkit for KLV data processing, parsing, and analysis')).toBeInTheDocument();
-      
+
+      expect(screen.getByText('KLV DATA EXTRACTION')).toBeInTheDocument();
+      expect(screen.getByText('▸ TRANSACTION PARSER v2.1.0')).toBeInTheDocument();
+
       // Check navigation tabs
       expect(screen.getByText('Extractor')).toBeInTheDocument();
       expect(screen.getByText('Builder')).toBeInTheDocument();
@@ -29,28 +29,28 @@ describe('App Integration Tests', () => {
 
     it('should start with extractor tab active', () => {
       render(<App />);
-      
+
       const extractorTab = screen.getByRole('button', { name: /extractor/i });
-      expect(extractorTab).toHaveClass('border-blue-500', 'text-blue-600');
-      
-      // Should show the KLV input textarea
-      expect(screen.getByPlaceholderText(/Enter KLV data/)).toBeInTheDocument();
+      expect(extractorTab).toHaveClass('border-3', 'glow-effect');
+
+      // Should show the KLV input textarea with new placeholder
+      expect(screen.getByPlaceholderText('PASTE KLV DATA HERE...')).toBeInTheDocument();
     });
 
     it('should show default sample KLV data', () => {
       render(<App />);
-      
-      const textarea = screen.getByPlaceholderText(/Enter KLV data/);
+
+      const textarea = screen.getByPlaceholderText('PASTE KLV DATA HERE...');
       expect(textarea).toHaveValue('00206AB48DE026044577');
     });
 
     it('should render quick reference footer', () => {
       render(<App />);
 
-      expect(screen.getByText('Format:')).toBeInTheDocument();
-      expect(screen.getByText('Example:')).toBeInTheDocument();
-      expect(screen.getByText('Keys:')).toBeInTheDocument();
-      expect(screen.getByText('Export:')).toBeInTheDocument();
+      expect(screen.getByText('FORMAT:')).toBeInTheDocument();
+      expect(screen.getByText('EXAMPLE:')).toBeInTheDocument();
+      expect(screen.getByText('KEYS:')).toBeInTheDocument();
+      expect(screen.getByText('EXPORT:')).toBeInTheDocument();
     });
   });
 
@@ -58,37 +58,37 @@ describe('App Integration Tests', () => {
     it('should switch to builder tab when clicked', async () => {
       const user = userEvent.setup();
       render(<App />);
-      
+
       const builderTab = screen.getByRole('button', { name: /builder/i });
       await user.click(builderTab);
-      
-      expect(builderTab).toHaveClass('border-blue-500', 'text-blue-600');
+
+      expect(builderTab).toHaveClass('border-3', 'glow-effect');
       expect(screen.getByText('KLV Builder')).toBeInTheDocument();
     });
 
     it('should switch to batch tab when clicked', async () => {
       const user = userEvent.setup();
       render(<App />);
-      
+
       const batchTab = screen.getByRole('button', { name: /batch/i });
       await user.click(batchTab);
-      
-      expect(batchTab).toHaveClass('border-blue-500', 'text-blue-600');
+
+      expect(batchTab).toHaveClass('border-3', 'glow-effect');
       expect(screen.getByText('Batch Processor')).toBeInTheDocument();
     });
 
     it('should switch to history tab when clicked', async () => {
       const user = userEvent.setup();
       render(<App />);
-      
+
       // Find the tab by looking for the button with History that has an svg icon (tab navigation)
       const historyTab = screen.getAllByRole('button', { name: /history/i })
         .find(button => button.querySelector('svg'));
       await user.click(historyTab!);
-      
-      expect(historyTab).toHaveClass('border-blue-500', 'text-blue-600');
-      expect(screen.getByText('Processing History')).toBeInTheDocument();
-      expect(screen.getByText('No processing history yet')).toBeInTheDocument();
+
+      expect(historyTab).toHaveClass('border-3', 'glow-effect');
+      expect(screen.getByText('PROCESSING HISTORY')).toBeInTheDocument();
+      expect(screen.getByText('NO HISTORY YET')).toBeInTheDocument();
     });
 
     it('should maintain tab state during navigation', async () => {
