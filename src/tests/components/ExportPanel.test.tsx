@@ -4,13 +4,17 @@ import userEvent from '@testing-library/user-event';
 import ExportPanel from '../../components/ExportPanel';
 import { KLVEntry } from '../../utils/KLVParser';
 import { mockURLAPIs, mockDOMFileDownload } from '../helpers/testUtils';
+import { vi } from 'vitest';
 
-// Mock Blob constructor
-global.Blob = jest.fn().mockImplementation((content, options) => ({
-  content,
-  options,
-  size: content[0]?.length || 0
-})) as any;
+// Mock Blob constructor with vi.fn
+const BlobMock = vi.fn(function (this: any, content: any[], options?: any) {
+  this.content = content;
+  this.options = options;
+  this.size = content[0]?.length || 0;
+  return this;
+}) as any;
+
+global.Blob = BlobMock;
 
 let domMocks: any;
 let urlMocks: any;

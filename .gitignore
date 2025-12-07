@@ -138,4 +138,10 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
+# Vite
+dist-ssr
+*.local
+.vite
+.vitest
+
 build/*

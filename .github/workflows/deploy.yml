@@ -36,8 +36,6 @@ jobs:
 
     - name: Build
       run: bun run build
-      env:
-        PUBLIC_URL: /klv-extractor
 
     - name: Setup Pages
       uses: actions/configure-pages@v4
@@ -45,7 +43,7 @@ jobs:
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ./build
+        path: ./dist
 
   deploy:
     environment:
