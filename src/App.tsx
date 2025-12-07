@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Search, Copy, Trash2, Eye, EyeOff, Info, Database, Settings, FileText } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Search, Copy, Trash2, Eye, EyeOff, Info, Database, Settings, FileText, Sun, Moon } from 'lucide-react';
 
 // Import components
 import FileUpload from './components/FileUpload';
@@ -39,6 +39,31 @@ const App: React.FC = () => {
   const [showRaw, setShowRaw] = useState<boolean>(false);
   const [, setBatchResults] = useState<BatchResult[]>([]);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string>('');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
+  // Initialize theme from localStorage or system preference
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const initialTheme = prefersDark ? 'dark' : 'light';
+      setTheme(initialTheme);
+      document.documentElement.setAttribute('data-theme', initialTheme);
+    }
+  }, []);
+
+  // Toggle theme
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
 
   // Parse KLV data
   const { results, errors } = useMemo(() => KLVParser.parse(klvInput), [klvInput]);
@@ -70,6 +95,14 @@ const App: React.FC = () => {
   ];
 
   // Utility functions
+  const showSuccessToast = (message: string) => {
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
+  };
+
   const addToHistory = (data: string, label?: string) => {
     const entry: HistoryEntry = {
       id: Date.now(),
@@ -79,6 +112,7 @@ const App: React.FC = () => {
       resultCount: KLVParser.parse(data).results.length
     };
     setHistory([entry, ...history.slice(0, 9)]); // Keep last 10
+    showSuccessToast('Saved to history!');
   };
 
   const loadFromHistory = (data: string) => {
@@ -113,6 +147,30 @@ const App: React.FC = () => {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden grid-background" style={{ background: 'var(--bg-primary)' }}>
+      {/* Toast Notification */}
+      {showToast && (
+        <div
+          className="fixed top-8 left-1/2 -translate-x-1/2 z-50 px-8 py-4 border-3"
+          style={{
+            background: 'var(--bg-secondary)',
+            borderColor: 'var(--accent-primary)',
+            color: 'var(--accent-primary)',
+            boxShadow: '6px 6px 0 rgba(0, 255, 136, 0.3)',
+            fontFamily: "'Work Sans', sans-serif",
+            fontWeight: 700,
+            fontSize: '0.875rem',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            animation: 'slideInUp 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards'
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 rounded-full pulse-animate" style={{ background: 'var(--accent-primary)' }}></div>
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex-shrink-0 border-b-4 border-[var(--border-color)] px-8 py-6" style={{
         background: 'var(--bg-secondary)',
@@ -131,14 +189,41 @@ const App: React.FC = () => {
               ▸ TRANSACTION PARSER v2.1.0
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="pulse-animate w-3 h-3 rounded-full" style={{ background: 'var(--accent-primary)' }}></div>
-            <span className="text-xs" style={{
-              color: 'var(--text-muted)',
-              fontFamily: "'Fira Code', monospace"
-            }}>
-              SYSTEM READY
-            </span>
+          <div className="flex items-center gap-6">
+            <button
+              onClick={toggleTheme}
+              className="p-3 border-3 transition-all"
+              style={{
+                background: 'var(--bg-tertiary)',
+                borderColor: 'var(--accent-primary)',
+                color: 'var(--accent-primary)',
+                boxShadow: '4px 4px 0 rgba(0, 255, 136, 0.2)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--accent-primary)';
+                e.currentTarget.style.color = 'var(--bg-primary)';
+                e.currentTarget.style.transform = 'translate(-1px, -1px)';
+                e.currentTarget.style.boxShadow = '5px 5px 0 rgba(0, 255, 136, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'var(--bg-tertiary)';
+                e.currentTarget.style.color = 'var(--accent-primary)';
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '4px 4px 0 rgba(0, 255, 136, 0.2)';
+              }}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            <div className="flex items-center gap-3">
+              <div className="pulse-animate w-3 h-3 rounded-full" style={{ background: 'var(--accent-primary)' }}></div>
+              <span className="text-xs" style={{
+                color: 'var(--text-muted)',
+                fontFamily: "'Fira Code', monospace"
+              }}>
+                SYSTEM READY
+              </span>
+            </div>
           </div>
         </div>
       </div>

@@ -17,6 +17,21 @@
     --success-color: #00ff88;
   }
 
+  :root[data-theme="light"] {
+    --bg-primary: #f5f5f0;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #fafafa;
+    --accent-primary: #00cc6a;
+    --accent-secondary: #ff6b00;
+    --accent-tertiary: #0099cc;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #6b6b6b;
+    --border-color: #2a2a2a;
+    --error-color: #d63447;
+    --success-color: #00cc6a;
+  }
+
   body {
     margin: 0;
     font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -47,6 +62,12 @@
   background-position: -1px -1px;
 }
 
+:root[data-theme="light"] .grid-background {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+}
+
 /* Brutal border effect */
 .brutal-border {
   border: 3px solid var(--border-color);
@@ -62,6 +83,14 @@
 .brutal-border-active {
   border: 3px solid var(--accent-primary);
   box-shadow: 6px 6px 0px var(--accent-primary);
+}
+
+:root[data-theme="light"] .brutal-border {
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme="light"] .brutal-border:hover {
+  box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.2);
 }
 
 /* Glow effect for active elements */
@@ -95,6 +124,15 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
 
@@ -170,6 +208,14 @@
   background: var(--accent-primary);
 }
 
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+}
+
+:root[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
 /* Button styles */
 .btn-primary {
   background: var(--accent-primary);
@@ -186,6 +232,15 @@
 .btn-primary:hover {
   box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.4);
   transform: translate(-1px, -1px);
+}
+
+:root[data-theme="light"] .btn-primary {
+  color: #ffffff;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme="light"] .btn-primary:hover {
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.2);
 }
 
 .btn-secondary {
@@ -205,6 +260,15 @@
   color: var(--bg-primary);
   box-shadow: 6px 6px 0px rgba(0, 255, 136, 0.3);
   transform: translate(-1px, -1px);
+}
+
+:root[data-theme="light"] .btn-secondary {
+  box-shadow: 4px 4px 0px rgba(0, 204, 106, 0.2);
+}
+
+:root[data-theme="light"] .btn-secondary:hover {
+  color: #ffffff;
+  box-shadow: 6px 6px 0px rgba(0, 204, 106, 0.3);
 }
 
 /* Tag/Badge styles */
@@ -243,6 +307,14 @@
   color: var(--text-muted);
 }
 
+:root[data-theme="light"] .input-brutal {
+  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="light"] .input-brutal:focus {
+  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.08), 0 0 0 3px rgba(0, 204, 106, 0.15);
+}
+
 /* Card styles */
 .card-brutal {
   background: var(--bg-secondary);
@@ -255,4 +327,12 @@
   border-color: var(--accent-primary);
   box-shadow: 8px 8px 0px rgba(0, 255, 136, 0.2);
   transform: translate(-2px, -2px);
+}
+
+:root[data-theme="light"] .card-brutal {
+  box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="light"] .card-brutal:hover {
+  box-shadow: 8px 8px 0px rgba(0, 204, 106, 0.25);
 }
