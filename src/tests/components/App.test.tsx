@@ -46,10 +46,11 @@ describe('App Integration Tests', () => {
 
     it('should render quick reference footer', () => {
       render(<App />);
-      
-      expect(screen.getByText('KLV Format Quick Reference')).toBeInTheDocument();
-      expect(screen.getByText('Format Structure:')).toBeInTheDocument();
+
+      expect(screen.getByText('Format:')).toBeInTheDocument();
       expect(screen.getByText('Example:')).toBeInTheDocument();
+      expect(screen.getByText('Keys:')).toBeInTheDocument();
+      expect(screen.getByText('Export:')).toBeInTheDocument();
     });
   });
 
@@ -458,12 +459,13 @@ describe('App Integration Tests', () => {
   describe('Responsive Design', () => {
     it('should have proper grid layouts for responsive design', () => {
       render(<App />);
-      
+
       const inputGrid = screen.getByText('KLV Data Input').closest('.grid');
       expect(inputGrid).toHaveClass('md:grid-cols-2');
-      
-      const referenceGrid = screen.getByText('Format Structure:').closest('.grid');
-      expect(referenceGrid).toHaveClass('md:grid-cols-4');
+
+      // Footer is now a horizontal flex layout
+      const footer = screen.getByText('Format:').closest('div');
+      expect(footer).toBeInTheDocument();
     });
   });
 

@@ -24,7 +24,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileLoad }) => {
   };
 
   return (
-    <div className="border-2 border-dashed border-gray-300 rounded p-4 text-center hover:border-gray-400 transition-colors">
+    <div className="border-3 p-6 text-center scan-effect transition-all" style={{
+      background: 'var(--bg-secondary)',
+      borderColor: 'var(--border-color)',
+      borderStyle: 'dashed',
+      boxShadow: '6px 6px 0 rgba(0, 0, 0, 0.2)'
+    }}>
       <input
         ref={fileRef}
         type="file"
@@ -33,13 +38,23 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileLoad }) => {
         className="hidden"
         aria-label="Upload KLV data file"
       />
-      <Upload className="mx-auto mb-2 text-gray-400" size={24} />
-      <p className="text-sm text-gray-600 mb-2">
-        Upload KLV data file (.txt, .log, .csv)
+      <Upload className="mx-auto mb-4" size={32} style={{ color: 'var(--accent-tertiary)' }} />
+      <p className="text-sm mb-4 uppercase tracking-wide" style={{
+        color: 'var(--text-secondary)',
+        fontFamily: "'Work Sans', sans-serif",
+        fontWeight: 600
+      }}>
+        Upload KLV Data File
+      </p>
+      <p className="text-xs mb-4" style={{
+        color: 'var(--text-muted)',
+        fontFamily: "'Fira Code', monospace"
+      }}>
+        .txt • .log • .csv • .json
       </p>
       <button
         onClick={() => fileRef.current?.click()}
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm transition-colors"
+        className="btn-primary"
       >
         Choose File
       </button>

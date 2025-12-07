@@ -40,22 +40,70 @@ const Statistics: React.FC<StatisticsProps> = ({ results }) => {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg">
-      <div className="text-center">
-        <div className="text-2xl font-bold text-blue-600">{stats.total}</div>
-        <div className="text-xs text-gray-600">Total Entries</div>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="card-brutal p-5 text-center">
+        <div className="text-4xl font-bold mb-2" style={{
+          color: 'var(--accent-primary)',
+          fontFamily: "'Bebas Neue', sans-serif",
+          letterSpacing: '0.05em'
+        }}>
+          {stats.total}
+        </div>
+        <div className="text-xs uppercase tracking-wider" style={{
+          color: 'var(--text-muted)',
+          fontFamily: "'Work Sans', sans-serif",
+          fontWeight: 600
+        }}>
+          Total Entries
+        </div>
       </div>
-      <div className="text-center">
-        <div className="text-2xl font-bold text-green-600">{stats.knownKeys}</div>
-        <div className="text-xs text-gray-600">Known Keys</div>
+      <div className="card-brutal p-5 text-center">
+        <div className="text-4xl font-bold mb-2" style={{
+          color: 'var(--success-color)',
+          fontFamily: "'Bebas Neue', sans-serif",
+          letterSpacing: '0.05em'
+        }}>
+          {stats.knownKeys}
+        </div>
+        <div className="text-xs uppercase tracking-wider" style={{
+          color: 'var(--text-muted)',
+          fontFamily: "'Work Sans', sans-serif",
+          fontWeight: 600
+        }}>
+          Known Keys
+        </div>
       </div>
-      <div className="text-center">
-        <div className="text-2xl font-bold text-yellow-600">{stats.unknownKeys}</div>
-        <div className="text-xs text-gray-600">Unknown Keys</div>
+      <div className="card-brutal p-5 text-center">
+        <div className="text-4xl font-bold mb-2" style={{
+          color: 'var(--accent-secondary)',
+          fontFamily: "'Bebas Neue', sans-serif",
+          letterSpacing: '0.05em'
+        }}>
+          {stats.unknownKeys}
+        </div>
+        <div className="text-xs uppercase tracking-wider" style={{
+          color: 'var(--text-muted)',
+          fontFamily: "'Work Sans', sans-serif",
+          fontWeight: 600
+        }}>
+          Unknown Keys
+        </div>
       </div>
-      <div className="text-center">
-        <div className="text-2xl font-bold text-purple-600">{stats.totalValueLength}</div>
-        <div className="text-xs text-gray-600">Total Length</div>
+      <div className="card-brutal p-5 text-center">
+        <div className="text-4xl font-bold mb-2" style={{
+          color: 'var(--accent-tertiary)',
+          fontFamily: "'Bebas Neue', sans-serif",
+          letterSpacing: '0.05em'
+        }}>
+          {stats.totalValueLength}
+        </div>
+        <div className="text-xs uppercase tracking-wider" style={{
+          color: 'var(--text-muted)',
+          fontFamily: "'Work Sans', sans-serif",
+          fontWeight: 600
+        }}>
+          Total Length
+        </div>
       </div>
     </div>
   );
