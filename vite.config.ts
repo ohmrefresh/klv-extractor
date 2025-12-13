@@ -30,7 +30,16 @@ export default defineConfig(({ mode }) => ({
     },
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov'],
+      alias: {
+        '@/': new URL('./src/', import.meta.url).pathname,
+      },
+      reporter: ['text', 'text-summary', 'lcov', 'json-summary', 'html', 'cobertura'],
+      thresholds: {
+        branches: 60,
+        functions: 60,
+        lines: 60,
+        statements: 60,
+      },
       exclude: [
         'node_modules/',
         'src/setupTests.ts',
