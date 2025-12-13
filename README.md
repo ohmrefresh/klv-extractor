@@ -16,6 +16,7 @@ A React-based KLV (Key-Length-Value) data extraction and processing suite for tr
 - **Processing history** with load and copy functionality
 - **Sample data** included for testing and demonstration
 - **Complete field definitions** for 100+ KLV fields (keys 002-999)
+- **Version and build information** displayed in UI for tracking deployments
 
 ## Getting Started
 
@@ -86,10 +87,10 @@ You can try the application without installing it locally at: [https://ohmrefres
 - View batch processing statistics and results
 - Export batch results for further analysis
 
-### 4. Statistics Tab
-- View parsing statistics and data insights
-- Analyze field usage patterns
-- Review processing history and performance metrics
+### 4. History Tab
+- Review processing history
+- Load previous KLV data for re-analysis
+- Copy and manage historical entries
 
 ## KLV Data Format
 
@@ -106,21 +107,23 @@ The application processes Key-Length-Value data with the structure:
 ## Technology Stack
 
 - **React 18** with TypeScript for type safety and modern React features
+- **Vite** - Modern build tool and development server
+- **Vitest** - Fast unit test framework with Jest-compatible API
 - **Tailwind CSS** for utility-first styling and responsive design
 - **Lucide React** for consistent and modern iconography
-- **Create React App** build system with optimized production builds
-- **Jest** and **React Testing Library** for comprehensive testing
+- **React Testing Library** for comprehensive component testing
 - **GitHub Pages** for automated deployment and hosting
 
 ## Architecture
 
 ### Core Components
 - **KLVParser** (`src/utils/KLVParser.ts`) - Core parsing engine with complete field definitions
-- **App** (`src/App.jsx`) - Main application state management and routing
+- **App** (`src/App.tsx`) - Main application state management and tab routing
 - **FileUpload** - File handling for KLV data input
-- **ExportPanel** - Multi-format export functionality
+- **ExportPanel** - Multi-format export functionality (JSON, CSV, Table)
 - **KLVBuilder** - Interactive KLV construction interface
 - **BatchProcessor** - Bulk processing capabilities
+- **Statistics** - Parsing statistics and data insights display
 
 ### Data Flow
 1. **Input**: KLV strings via manual input, file upload, or builder
@@ -131,16 +134,21 @@ The application processes Key-Length-Value data with the structure:
 
 ## Testing
 
-The application includes comprehensive test coverage:
+The application includes comprehensive test coverage using Vitest:
 
-- **Unit tests** for KLV Parser utility
-- **Component tests** for React components
-- **Integration tests** for full application workflows
-- **Test utilities** for mocking and shared helpers
+- **Unit tests** for KLV Parser utility (`src/tests/utils/KLVParser.test.ts`)
+- **Component tests** for React components (`src/tests/components/*.test.tsx`)
+- **Integration tests** for full application workflows (`src/tests/integration/*.test.tsx`)
+- **Test utilities** for mocking and shared helpers (`src/tests/helpers/testUtils.ts`)
 
 Run tests with coverage:
 ```bash
 npm run test:coverage
+```
+
+Interactive test UI:
+```bash
+npm run test:ui
 ```
 
 ## Contributing
@@ -161,6 +169,14 @@ This application is designed for defensive security purposes only:
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Version Information
+
+The application displays version and build information in the UI footer:
+- **Version number** - Automatically read from `package.json`
+- **Build date/time** - Generated during the build process via Vite
+
+This helps track deployments and ensures users know which version they're using.
 
 ## Support
 
