@@ -51,20 +51,20 @@ You can try the application without installing it locally at: [https://ohmrefres
 ## Available Scripts
 
 ### Development
-- `npm start` - Runs the app in development mode on http://localhost:3000
+- `npm start` - Runs the app in development mode with Vite
+- `npm run dev` - Alternative command to start the development server
 - `npm run build` - Builds the app for production to the `build` folder
+- `npm run preview` - Preview the production build locally
 
 ### Testing
-- `npm test` - Launches the test runner in interactive watch mode
+- `npm test` - Launches the test runner in interactive watch mode with Vitest
 - `npm run test:coverage` - Runs all tests with coverage report
 - `npm run test:ci` - Runs tests in CI mode with coverage (no watch)
+- `npm run test:ui` - Opens Vitest UI for interactive test running
 
 ### Deployment
 - `npm run deploy` - Deploy to GitHub Pages
 - `npm run predeploy` - Pre-deployment build step
-
-### Other
-- `npm run eject` - One-way operation to eject from Create React App
 
 ## How to Use
 
