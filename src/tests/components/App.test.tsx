@@ -1,4 +1,4 @@
-import React from 'react';
+import { vi } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
@@ -10,7 +10,7 @@ const mockWriteText = mockClipboardAPI();
 describe('App Integration Tests', () => {
   beforeEach(() => {
     mockWriteText.mockClear();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Initial Rendering', () => {
@@ -276,7 +276,7 @@ describe('App Integration Tests', () => {
     it.skip('should handle clipboard errors gracefully', async () => {
       const user = userEvent.setup();
       mockWriteText.mockRejectedValue(new Error('Clipboard error'));
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       
       render(<App />);
       
@@ -429,7 +429,7 @@ describe('App Integration Tests', () => {
       const mockFile = new File(['04210000050010008USD'], 'test.txt', { type: 'text/plain' });
       
       // Mock the text() method
-      File.prototype.text = jest.fn().mockResolvedValue('04210000050010008USD');
+      File.prototype.text = vi.fn().mockResolvedValue('04210000050010008USD');
       
       // Simulate file upload
       const event = {

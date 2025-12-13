@@ -1,16 +1,28 @@
-import React from 'react';
 import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ExportPanel from '../../components/ExportPanel';
 import { KLVEntry } from '../../utils/KLVParser';
 import { mockURLAPIs, mockDOMFileDownload } from '../helpers/testUtils';
+import { vi } from 'vitest';
 
 // Mock Blob constructor
-global.Blob = jest.fn().mockImplementation((content, options) => ({
-  content,
-  options,
-  size: content[0]?.length || 0
-})) as any;
+class BlobMock {
+  content: any[];
+  options: any;
+  size: number;
+  type: string;
+  
+  constructor(content: any[], options: any = {}) {
+    this.content = content;
+    this.options = options;
+    this.type = options.type || '';
+    this.size = content[0]?.length || 0;
+  }
+}
+
+const originalBlob = globalThis.Blob;
+(globalThis as any).Blob = BlobMock;
+vi.spyOn(globalThis as any, 'Blob');
 
 let domMocks: any;
 let urlMocks: any;
@@ -34,7 +46,7 @@ describe('ExportPanel', () => {
   ];
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
@@ -95,7 +107,7 @@ describe('ExportPanel', () => {
       const jsonButton = screen.getByText('JSON');
       await user.click(jsonButton);
       
-      expect(global.Blob).toHaveBeenCalledWith(
+      expect(globalThis.Blob).toHaveBeenCalledWith(
         [expect.stringContaining('"key": "002"')],
         { type: 'application/json' }
       );
@@ -118,7 +130,7 @@ describe('ExportPanel', () => {
       const csvButton = screen.getByText('CSV');
       await user.click(csvButton);
       
-      expect(global.Blob).toHaveBeenCalledWith(
+      expect(globalThis.Blob).toHaveBeenCalledWith(
         [expect.stringContaining('Key,Name,Length,Value,Position')],
         { type: 'text/csv' }
       );
@@ -137,7 +149,7 @@ describe('ExportPanel', () => {
       const tableButton = screen.getByText('Table');
       await user.click(tableButton);
       
-      expect(global.Blob).toHaveBeenCalledWith(
+      expect(globalThis.Blob).toHaveBeenCalledWith(
         [expect.stringContaining('002')],
         { type: 'text/plain' }
       );
@@ -242,7 +254,7 @@ describe('ExportPanel', () => {
       const jsonButton = screen.getByText('JSON');
       await user.click(jsonButton);
       
-      expect(global.Blob).toHaveBeenCalled();
+      expect(globalThis.Blob).toHaveBeenCalled();
       expect(domMocks.mocks.mockClick).toHaveBeenCalled();
     });
 
@@ -267,7 +279,7 @@ describe('ExportPanel', () => {
       const csvButton = screen.getByText('CSV');
       await user.click(csvButton);
       
-      expect(global.Blob).toHaveBeenCalledWith(
+      expect(globalThis.Blob).toHaveBeenCalledWith(
         [expect.stringContaining('Test"Value,')],
         { type: 'text/csv' }
       );
@@ -314,7 +326,7 @@ describe('ExportPanel', () => {
       const tableButton = screen.getByText('Table');
       await user.click(tableButton);
       
-      expect(global.Blob).toHaveBeenCalledWith(
+      expect(globalThis.Blob).toHaveBeenCalledWith(
         [expect.stringContaining('002') && expect.stringContaining('999')],
         { type: 'text/plain' }
       );

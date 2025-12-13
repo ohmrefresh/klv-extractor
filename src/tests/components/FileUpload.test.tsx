@@ -1,6 +1,6 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
 import FileUpload from '../../components/FileUpload';
 
 // Mock file reading
@@ -8,7 +8,7 @@ const mockFileContent = '00206AB48DE026044577';
 const mockFileName = 'test-klv-data.txt';
 
 describe('FileUpload', () => {
-  const mockOnFileLoad = jest.fn();
+  const mockOnFileLoad = vi.fn();
 
   beforeEach(() => {
     mockOnFileLoad.mockClear();
@@ -38,7 +38,7 @@ describe('FileUpload', () => {
     const chooseFileButton = screen.getByText('Choose File');
     const fileInput = screen.getByLabelText('Upload KLV data file');
     
-    const clickSpy = jest.spyOn(fileInput, 'click');
+    const clickSpy = vi.spyOn(fileInput, 'click');
     
     await user.click(chooseFileButton);
     
@@ -57,7 +57,7 @@ describe('FileUpload', () => {
     
     // Mock the text() method on the File prototype
     const originalText = File.prototype.text;
-    File.prototype.text = jest.fn().mockResolvedValue(mockFileContent);
+    File.prototype.text = vi.fn().mockResolvedValue(mockFileContent);
     
     fireEvent.change(fileInput, { target: { files: [mockFile] } });
     
@@ -76,7 +76,7 @@ describe('FileUpload', () => {
     const mockFile = new File([mockFileContent], mockFileName, { type: 'text/plain' });
     
     // Mock the text() method
-    File.prototype.text = jest.fn().mockResolvedValue(mockFileContent);
+    File.prototype.text = vi.fn().mockResolvedValue(mockFileContent);
     
     fireEvent.change(fileInput, { target: { files: [mockFile] } });
     
@@ -88,8 +88,8 @@ describe('FileUpload', () => {
   });
 
   it('should handle file reading errors gracefully', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-    const alertSpy = jest.spyOn(window, 'alert').mockImplementation();
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {});
     
     render(<FileUpload onFileLoad={mockOnFileLoad} />);
     
@@ -97,7 +97,7 @@ describe('FileUpload', () => {
     const mockFile = new File([mockFileContent], mockFileName, { type: 'text/plain' });
     
     // Mock text() to throw an error
-    File.prototype.text = jest.fn().mockRejectedValue(new Error('File read error'));
+    File.prototype.text = vi.fn().mockRejectedValue(new Error('File read error'));
     
     fireEvent.change(fileInput, { target: { files: [mockFile] } });
     

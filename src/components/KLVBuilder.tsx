@@ -56,11 +56,11 @@ const KLVBuilder: React.FC<KLVBuilderProps> = ({ onBuild }) => {
               <select
                 value={entry.key}
                 onChange={(e) => updateEntry(index, 'key', e.target.value)}
-                className="w-24 p-2 border rounded text-sm"
+                className="w-120 p-2 border rounded text-sm"
               >
                 {Object.entries(KLVParser.definitions).map(([key, name]) => (
                   <option key={key} value={key}>
-                    {key} - {name.slice(0, 20)}...
+                    {key} - {name}
                   </option>
                 ))}
               </select>

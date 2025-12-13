@@ -1,10 +1,10 @@
-import React from 'react';
+import { vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import KLVBuilder from '../../components/KLVBuilder';
 
 describe('KLVBuilder', () => {
-  const mockOnBuild = jest.fn();
+  const mockOnBuild = vi.fn();
 
   beforeEach(() => {
     mockOnBuild.mockClear();
