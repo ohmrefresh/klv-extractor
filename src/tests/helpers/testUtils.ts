@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { KLVEntry } from '../../utils/KLVParser';
 
 // Mock KLV data for testing
@@ -56,14 +57,14 @@ export const createMockFile = (content: string, name: string, type: string = 'te
   const file = new File([content], name, { type });
   
   // Mock the text() method for testing
-  (file as any).text = jest.fn().mockResolvedValue(content);
+  (file as any).text = vi.fn().mockResolvedValue(content);
   
   return file;
 };
 
 // Mock clipboard API
 export const mockClipboardAPI = () => {
-  const mockWriteText = jest.fn().mockResolvedValue(undefined);
+  const mockWriteText = vi.fn().mockResolvedValue(undefined);
   
   Object.defineProperty(navigator, 'clipboard', {
     value: {
@@ -77,8 +78,8 @@ export const mockClipboardAPI = () => {
 
 // Mock URL APIs for file downloads
 export const mockURLAPIs = () => {
-  const mockCreateObjectURL = jest.fn().mockReturnValue('mock-blob-url');
-  const mockRevokeObjectURL = jest.fn();
+  const mockCreateObjectURL = vi.fn().mockReturnValue('mock-blob-url');
+  const mockRevokeObjectURL = vi.fn();
   
   Object.defineProperty(URL, 'createObjectURL', {
     value: mockCreateObjectURL,
@@ -95,9 +96,9 @@ export const mockURLAPIs = () => {
 
 // Mock DOM methods for file downloads
 export const mockDOMFileDownload = () => {
-  const mockClick = jest.fn();
-  const mockAppendChild = jest.fn();
-  const mockRemoveChild = jest.fn();
+  const mockClick = vi.fn();
+  const mockAppendChild = vi.fn();
+  const mockRemoveChild = vi.fn();
   
   const mockElement = {
     click: mockClick,
@@ -107,7 +108,7 @@ export const mockDOMFileDownload = () => {
   };
   
   const originalCreateElement = document.createElement;
-  document.createElement = jest.fn().mockReturnValue(mockElement);
+  document.createElement = vi.fn().mockReturnValue(mockElement);
   
   const originalAppendChild = document.body.appendChild;
   document.body.appendChild = mockAppendChild;
@@ -140,9 +141,9 @@ export const mockConsole = () => {
   const originalLog = console.log;
   const originalWarn = console.warn;
   
-  console.error = jest.fn();
-  console.log = jest.fn();
-  console.warn = jest.fn();
+  console.error = vi.fn();
+  console.log = vi.fn();
+  console.warn = vi.fn();
   
   return {
     cleanup: () => {

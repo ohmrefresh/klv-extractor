@@ -1,17 +1,17 @@
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import BatchProcessor from '../../components/BatchProcessor';
 
 describe('BatchProcessor', () => {
-  const mockOnProcess = jest.fn();
+  const mockOnProcess = vi.fn();
 
   beforeEach(() => {
     mockOnProcess.mockClear();
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   describe('Initial Rendering', () => {
@@ -142,8 +142,8 @@ describe('BatchProcessor', () => {
     });
 
     it('should process single valid KLV string and show results', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      vi.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
@@ -153,7 +153,7 @@ describe('BatchProcessor', () => {
       await user.click(processButton);
       
       // Fast-forward the processing delay
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         expect(screen.getByText('Batch Results')).toBeInTheDocument();
@@ -176,8 +176,8 @@ describe('BatchProcessor', () => {
     });
 
     it('should process multiple KLV strings and show aggregated results', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      vi.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
@@ -187,7 +187,7 @@ describe('BatchProcessor', () => {
       const processButton = screen.getByText('Process Batch');
       await user.click(processButton);
       
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         expect(screen.getByText('Batch Results')).toBeInTheDocument();
@@ -211,8 +211,8 @@ describe('BatchProcessor', () => {
     });
 
     it('should handle invalid KLV strings and show errors', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      vi.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
@@ -221,7 +221,7 @@ describe('BatchProcessor', () => {
       const processButton = screen.getByText('Process Batch');
       await user.click(processButton);
       
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         expect(screen.getByText('Batch Results')).toBeInTheDocument();
@@ -231,8 +231,8 @@ describe('BatchProcessor', () => {
     });
 
     it('should handle mixed valid and invalid KLV strings', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      vi.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
@@ -242,7 +242,7 @@ describe('BatchProcessor', () => {
       const processButton = screen.getByText('Process Batch');
       await user.click(processButton);
       
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         expect(screen.getByText('Batch Results')).toBeInTheDocument();
@@ -253,15 +253,15 @@ describe('BatchProcessor', () => {
 
   describe('Results Display', () => {
     it('should show correct success indicators for valid entries', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      vi.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
       await user.type(textarea, '00206AB48DE026044577');
       
       await user.click(screen.getByText('Process Batch'));
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         const successResult = screen.getByText('Line 1').parentElement?.parentElement;
@@ -271,15 +271,15 @@ describe('BatchProcessor', () => {
     });
 
     it('should show correct error indicators for invalid entries', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      vi.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
       await user.type(textarea, 'INVALID_KLV');
       
       await user.click(screen.getByText('Process Batch'));
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         const errorResult = screen.getByText('Line 1').parentElement?.parentElement;
@@ -289,8 +289,8 @@ describe('BatchProcessor', () => {
     });
 
     it('should display original input for each result', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      vi.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const inputString = '00206AB48DE026044577';
@@ -298,7 +298,7 @@ describe('BatchProcessor', () => {
       await user.type(textarea, inputString);
       
       await user.click(screen.getByText('Process Batch'));
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         expect(screen.getByText(inputString)).toBeInTheDocument();
@@ -306,14 +306,14 @@ describe('BatchProcessor', () => {
     });
 
     it('should handle results with scrollable area when many entries', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      vi.useFakeTimers();
+      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       // Load sample data which has 4 entries
       await user.click(screen.getByText('Load Sample'));
       await user.click(screen.getByText('Process Batch'));
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         const resultsContainer = screen.getByText('Batch Results').parentElement?.parentElement?.querySelector('.max-h-96');
@@ -369,15 +369,15 @@ describe('BatchProcessor', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty lines and whitespace correctly', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
       await user.type(textarea, '00206AB48DE026044577\n\n   \n\t\n04210000050010008USD');
       
       await user.click(screen.getByText('Process Batch'));
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         expect(mockOnProcess).toHaveBeenCalledWith([
@@ -388,15 +388,15 @@ describe('BatchProcessor', () => {
     });
 
     it('should trim whitespace from input lines', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      // removed fake timers
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
       await user.type(textarea, '  00206AB48DE026044577  ');
       
       await user.click(screen.getByText('Process Batch'));
-      jest.advanceTimersByTime(500);
+      // removed timer advancement
       
       await waitFor(() => {
         expect(mockOnProcess).toHaveBeenCalledWith([
@@ -406,8 +406,8 @@ describe('BatchProcessor', () => {
     });
 
     it('should handle very long input strings', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      // removed fake timers
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const longInput = '00206AB48DE026044577'.repeat(10);
@@ -415,7 +415,7 @@ describe('BatchProcessor', () => {
       await user.type(textarea, longInput);
       
       await user.click(screen.getByText('Process Batch'));
-      jest.advanceTimersByTime(500);
+      // removed timer advancement
       
       await waitFor(() => {
         expect(mockOnProcess).toHaveBeenCalledWith([
@@ -425,8 +425,8 @@ describe('BatchProcessor', () => {
     });
 
     it('should handle special characters in input', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      // removed fake timers
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const specialInput = 'ABC@#$%^&*()DEF';
@@ -435,7 +435,7 @@ describe('BatchProcessor', () => {
       
       const processButton = screen.getByRole('button', { name: /process batch/i });
       await user.click(processButton);
-      jest.advanceTimersByTime(500);
+      // removed timer advancement
       
       await waitFor(() => {
         expect(mockOnProcess).toHaveBeenCalledWith([
@@ -447,8 +447,8 @@ describe('BatchProcessor', () => {
 
   describe('Component Lifecycle', () => {
     it('should clear results when new processing starts', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: jest.advanceTimersByTime });
+      // removed fake timers
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       // Process first batch
@@ -456,7 +456,7 @@ describe('BatchProcessor', () => {
       await user.type(textarea, '00206AB48DE026044577');
       const processButton = screen.getByRole('button', { name: /process batch/i });
       await user.click(processButton);
-      jest.advanceTimersByTime(500);
+      // removed timer advancement
       
       await waitFor(() => {
         expect(screen.getByText('Batch Results')).toBeInTheDocument();
@@ -466,7 +466,7 @@ describe('BatchProcessor', () => {
       await user.clear(textarea);
       await user.type(textarea, '04210000050010008USD');
       await user.click(processButton);
-      jest.advanceTimersByTime(500);
+      // removed timer advancement
       
       await waitFor(() => {
         expect(mockOnProcess).toHaveBeenCalledTimes(2);

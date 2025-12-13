@@ -8,12 +8,14 @@ This is a React-based KLV (Key-Length-Value) data extraction and processing suit
 
 ## Development Commands
 
-- `npm start` - Runs the app in development mode on http://localhost:3000
-- `npm run build` - Builds the app for production to the `build` folder  
-- `npm test` - Launches the test runner in interactive watch mode
+- `npm start` - Runs the app in development mode with Vite (http://localhost:3000 or next available port)
+- `npm run dev` - Alternative command to start development server
+- `npm run build` - Builds the app for production to the `build` folder using TypeScript and Vite
+- `npm run preview` - Preview the production build locally
+- `npm test` - Launches Vitest test runner in interactive watch mode
 - `npm run test:coverage` - Runs all tests with coverage report
 - `npm run test:ci` - Runs tests in CI mode with coverage (no watch)
-- `npm run eject` - One-way operation to eject from Create React App
+- `npm run test:ui` - Opens Vitest UI for interactive test running
 
 ## Core Architecture
 
@@ -60,9 +62,10 @@ The application uses a tab-based interface with four main sections:
 
 - **React 18** with functional components and hooks
 - **TypeScript** for type safety and better development experience
+- **Vite** - Modern build tool and development server
+- **Vitest** - Fast unit test framework with Jest-compatible API
 - **Tailwind CSS** for styling (included as dev dependency)
 - **Lucide React** for icons
-- **Create React App** build system with standard ESLint config
 
 ## KLV Data Format
 
@@ -120,7 +123,8 @@ npm run test:ci         # CI-friendly test run
 ```
 
 ### Test Dependencies
-- Jest (test framework, included with Create React App)
+- Vitest (test framework with Jest-compatible API)
 - React Testing Library (component testing)
 - @testing-library/jest-dom (DOM assertions)
 - @testing-library/user-event (user interaction simulation)
+- @vitest/coverage-v8 (code coverage)
