@@ -6,6 +6,8 @@ export default defineConfig(({ mode }) => ({
   plugins: [react()],
   define: {
     'process.env.NODE_ENV': JSON.stringify(mode === 'test' ? 'test' : mode),
+    '__BUILD_DATE__': JSON.stringify(new Date().toISOString()),
+    '__APP_VERSION__': JSON.stringify(process.env.npm_package_version || '0.2.0'),
   },
   resolve: {
     conditions: mode === 'test' ? ['development'] : [],

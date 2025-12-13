@@ -445,6 +445,15 @@ const App: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Version Footer */}
+        <div className="mt-4 text-center text-sm text-gray-500">
+          <div className="flex items-center justify-center gap-4">
+            <span>Version {__APP_VERSION__}</span>
+            <span>•</span>
+            <span>Built: {new Date(__BUILD_DATE__).toLocaleDateString()} {new Date(__BUILD_DATE__).toLocaleTimeString()}</span>
+          </div>
+        </div>
       </div>
     </div>
   );
