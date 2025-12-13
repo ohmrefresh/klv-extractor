@@ -408,10 +408,10 @@ describe('App Integration Tests', () => {
       await user.click(screen.getByRole('button', { name: /builder/i }));
       
       // Add a value and build KLV
-      const valueInput = screen.getByPlaceholderText('Enter value...');
+      const valueInput = screen.getByPlaceholderText('Enter hex value...');
       await user.type(valueInput, 'TEST123');
       
-      const buildButton = screen.getByText('Build KLV');
+      const buildButton = screen.getByText('Build KLV String');
       await user.click(buildButton);
       
       // Should switch to extractor tab with built KLV

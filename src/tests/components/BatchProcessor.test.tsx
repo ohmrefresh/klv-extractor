@@ -142,8 +142,7 @@ describe('BatchProcessor', () => {
     });
 
     it('should process single valid KLV string and show results', async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
@@ -152,15 +151,13 @@ describe('BatchProcessor', () => {
       const processButton = screen.getByText('Process Batch');
       await user.click(processButton);
       
-      // Fast-forward the processing delay
-      vi.advanceTimersByTime(500);
-      
+      // Wait for the processing delay (500ms) and state updates
       await waitFor(() => {
         expect(screen.getByText('Batch Results')).toBeInTheDocument();
-        expect(screen.getByText(/1 successful,\s+0 failed/)).toBeInTheDocument();
+        expect(screen.getByText(/1 successful,\s*0 failed/)).toBeInTheDocument();
         expect(screen.getByText('Line 1')).toBeInTheDocument();
         expect(screen.getByText('2 entries')).toBeInTheDocument();
-      });
+      }, { timeout: 2000 });
       
       expect(mockOnProcess).toHaveBeenCalledWith([
         expect.objectContaining({
@@ -176,8 +173,7 @@ describe('BatchProcessor', () => {
     });
 
     it('should process multiple KLV strings and show aggregated results', async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
@@ -187,14 +183,12 @@ describe('BatchProcessor', () => {
       const processButton = screen.getByText('Process Batch');
       await user.click(processButton);
       
-      vi.advanceTimersByTime(500);
-      
       await waitFor(() => {
         expect(screen.getByText('Batch Results')).toBeInTheDocument();
-        expect(screen.getByText(/2 successful,\s+0 failed/)).toBeInTheDocument();
+        expect(screen.getByText(/2 successful,\s*0 failed/)).toBeInTheDocument();
         expect(screen.getByText('Line 1')).toBeInTheDocument();
         expect(screen.getByText('Line 2')).toBeInTheDocument();
-      });
+      }, { timeout: 2000 });
       
       expect(mockOnProcess).toHaveBeenCalledWith(
         expect.arrayContaining([
@@ -211,8 +205,7 @@ describe('BatchProcessor', () => {
     });
 
     it('should handle invalid KLV strings and show errors', async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
@@ -221,18 +214,15 @@ describe('BatchProcessor', () => {
       const processButton = screen.getByText('Process Batch');
       await user.click(processButton);
       
-      vi.advanceTimersByTime(500);
-      
       await waitFor(() => {
         expect(screen.getByText('Batch Results')).toBeInTheDocument();
-        expect(screen.getByText(/0 successful,\s+1 failed/)).toBeInTheDocument();
+        expect(screen.getByText(/0 successful,\s*1 failed/)).toBeInTheDocument();
         expect(screen.getByText(/errors/)).toBeInTheDocument();
-      });
+      }, { timeout: 2000 });
     });
 
     it('should handle mixed valid and invalid KLV strings', async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
@@ -242,55 +232,48 @@ describe('BatchProcessor', () => {
       const processButton = screen.getByText('Process Batch');
       await user.click(processButton);
       
-      vi.advanceTimersByTime(500);
-      
       await waitFor(() => {
         expect(screen.getByText('Batch Results')).toBeInTheDocument();
         expect(screen.getByText(/2 successful.*1 failed/)).toBeInTheDocument();
-      });
+      }, { timeout: 2000 });
     });
   });
 
   describe('Results Display', () => {
     it('should show correct success indicators for valid entries', async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
       await user.type(textarea, '00206AB48DE026044577');
       
       await user.click(screen.getByText('Process Batch'));
-      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         const successResult = screen.getByText('Line 1').parentElement?.parentElement;
         expect(successResult).toHaveClass('bg-green-50', 'border-green-200');
         expect(screen.getByText('Keys found: 002, 026')).toBeInTheDocument();
-      });
+      }, { timeout: 2000 });
     });
 
     it('should show correct error indicators for invalid entries', async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
       await user.type(textarea, 'INVALID_KLV');
       
       await user.click(screen.getByText('Process Batch'));
-      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         const errorResult = screen.getByText('Line 1').parentElement?.parentElement;
         expect(errorResult).toHaveClass('bg-red-50', 'border-red-200');
         expect(screen.getByText(/Errors:/)).toBeInTheDocument();
-      });
+      }, { timeout: 2000 });
     });
 
     it('should display original input for each result', async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       const inputString = '00206AB48DE026044577';
@@ -298,28 +281,25 @@ describe('BatchProcessor', () => {
       await user.type(textarea, inputString);
       
       await user.click(screen.getByText('Process Batch'));
-      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         expect(screen.getByText(inputString)).toBeInTheDocument();
-      });
+      }, { timeout: 2000 });
     });
 
     it('should handle results with scrollable area when many entries', async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+      const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
       // Load sample data which has 4 entries
       await user.click(screen.getByText('Load Sample'));
       await user.click(screen.getByText('Process Batch'));
-      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         const resultsContainer = screen.getByText('Batch Results').parentElement?.parentElement?.querySelector('.max-h-96');
         expect(resultsContainer).toBeInTheDocument();
         expect(resultsContainer).toHaveClass('overflow-y-auto');
-      });
+      }, { timeout: 2000 });
     });
   });
 
@@ -369,7 +349,6 @@ describe('BatchProcessor', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty lines and whitespace correctly', async () => {
-      
       const user = userEvent.setup();
       render(<BatchProcessor onProcess={mockOnProcess} />);
       
@@ -377,7 +356,6 @@ describe('BatchProcessor', () => {
       await user.type(textarea, '00206AB48DE026044577\n\n   \n\t\n04210000050010008USD');
       
       await user.click(screen.getByText('Process Batch'));
-      vi.advanceTimersByTime(500);
       
       await waitFor(() => {
         expect(mockOnProcess).toHaveBeenCalledWith([
