@@ -37,9 +37,9 @@ const BatchProcessor: React.FC<BatchProcessorProps> = ({ onProcess }) => {
   const loadSampleBatch = () => {
     const sampleData = [
       '00206AB48DE026044577',
-      '04210000050010008USD04305Test Merchant',
-      '25103EMV25107Visa26105542200015INVALID_ENTRY',
-      '04210050026055422600512345678042036MERCHANT_ID_12343015Test Transaction'
+      '04212MERCHANT000104313Test Merchant0490376425103EMV25204Visa',
+      '25103EMV26105INVALID_ENTRY',
+      '00206AB48DE04216MERCHANT_ID_12342601008123456782610900000015004316Test Transaction'
     ].join('\n');
     setBatchInput(sampleData);
   };

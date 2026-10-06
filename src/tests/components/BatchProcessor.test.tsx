@@ -58,7 +58,7 @@ describe('BatchProcessor', () => {
       const textarea = screen.getByPlaceholderText(/Enter multiple KLV strings/);
       const textareaValue = (textarea as HTMLTextAreaElement).value;
       expect(textareaValue).toContain('00206AB48DE026044577');
-      expect(textareaValue).toContain('04210000050010008USD04305Test Merchant');
+      expect(textareaValue).toContain('04212MERCHANT000104313Test Merchant');
       expect(screen.getByText('Lines to process: 4')).toBeInTheDocument();
     });
 
