@@ -235,7 +235,16 @@ describe('App Integration Tests', () => {
       await user.click(sample2Button);
       
       const textarea = screen.getByPlaceholderText(/Enter KLV data/);
-      expect(textarea).toHaveValue('04210000050010008USD04305Test Merchant25103EMV25107Visa');
+      expect(textarea).toHaveValue('04212MERCHANT000104313Test Merchant0490376425103EMV25204Visa');
+    });
+
+    it.each(['Sample 1', 'Sample 2', 'Sample 3'])('should parse %s without errors', async (label) => {
+      const user = userEvent.setup();
+      render(<App />);
+
+      await user.click(screen.getByText(label));
+
+      expect(screen.queryByText('Parsing Errors')).not.toBeInTheDocument();
     });
 
     it('should clear input when clear button is clicked', async () => {
