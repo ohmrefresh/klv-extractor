@@ -52,6 +52,43 @@ describe('KLVParser', () => {
       expect(result.results[1].value).toBe('4577');
     });
 
+    it('should preserve spaces inside values (space-padded fields)', () => {
+      const input = [
+        '00210TRK0000001',
+        '00412000000001000',
+        '04108TERM0001',
+        '04215MERCH01        ', // 7 chars + 8 spaces of padding
+        '04903840',
+        '25104TEST',
+        '91100'
+      ].join('');
+      const result: KLVParseResult = KLVParser.parse(input);
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.results).toHaveLength(7);
+      const byKey = (k: string) => result.results.find(r => r.key === k);
+      expect(byKey('042')?.value).toBe('MERCH01        ');
+      expect(byKey('049')?.value).toBe('840');
+      expect(byKey('251')?.value).toBe('TEST');
+      expect(result.results[result.results.length - 1].key).toBe('911');
+    });
+
+    it('should keep internal spaces in a value', () => {
+      const result: KLVParseResult = KLVParser.parse('00205AB CD');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.results[0].value).toBe('AB CD');
+    });
+
+    it('should keep an all-space value in compact format', () => {
+      const result: KLVParseResult = KLVParser.parse('04215' + ' '.repeat(15) + '04903764');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.results).toHaveLength(2);
+      expect(result.results[0].value).toBe(' '.repeat(15));
+      expect(result.results[1].value).toBe('764');
+    });
+
     it('should return error for incomplete entry', () => {
       const input = '002';
       const result: KLVParseResult = KLVParser.parse(input);

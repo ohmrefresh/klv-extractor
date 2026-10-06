@@ -23,7 +23,7 @@ const BatchProcessor: React.FC<BatchProcessorProps> = ({ onProcess }) => {
     const batchResults: BatchResult[] = lines.map((line, index) => ({
       line: index + 1,
       input: line.trim(),
-      ...KLVParser.parse(line.trim())
+      ...KLVParser.parse(line)
     }));
     
     // Simulate processing delay for better UX

@@ -258,7 +258,7 @@ const App: React.FC = () => {
                         {showRaw && (
                           <div className="mb-4 p-3 bg-gray-100 rounded border font-mono text-sm break-all">
                             <span className="text-gray-600">Raw KLV: </span>
-                            <span className="text-gray-800">{klvInput.replace(/\s/g, '')}</span>
+                            <span className="text-gray-800 whitespace-pre-wrap">{klvInput.trim()}</span>
                           </div>
                         )}
 
