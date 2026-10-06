@@ -84,7 +84,7 @@ const KLVBuilder: React.FC<KLVBuilderProps> = ({ onBuild }) => {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
         <div>
           <h3 className="font-semibold text-lg">KLV Builder</h3>
           <p className="text-xs text-gray-500 mt-1">Build KLV strings by adding key-value pairs</p>
@@ -101,7 +101,7 @@ const KLVBuilder: React.FC<KLVBuilderProps> = ({ onBuild }) => {
       </div>
 
       {/* Stats Bar */}
-      <div className="flex gap-4 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+      <div className="flex flex-wrap gap-x-4 gap-y-2 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
         <div className="flex items-center gap-2">
           <Info size={16} className="text-blue-600" />
           <span className="text-gray-700">
@@ -126,16 +126,16 @@ const KLVBuilder: React.FC<KLVBuilderProps> = ({ onBuild }) => {
           const keyName = KLVParser.definitions[entry.key as keyof typeof KLVParser.definitions];
           
           return (
-            <div key={index} className={`flex gap-3 items-start p-4 border-2 rounded-lg transition-all ${isDuplicate ? 'border-red-400 bg-red-50 shadow-sm' : 'border-gray-200 bg-white hover:border-blue-300'}`}>
+            <div key={index} className={`flex flex-wrap sm:flex-nowrap gap-3 items-start p-3 sm:p-4 border-2 rounded-lg transition-all ${isDuplicate ? 'border-red-400 bg-red-50 shadow-sm' : 'border-gray-200 bg-white hover:border-blue-300'}`}>
               {/* Entry Number Badge */}
-              <div className="flex-shrink-0 pt-1">
+              <div className="flex-shrink-0 pt-1 order-1 sm:order-none">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${isDuplicate ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}`}>
                   {index + 1}
                 </div>
               </div>
 
               {/* Key Selection */}
-              <div className="flex-shrink-0 min-w-[200px]">
+              <div className="flex-shrink-0 w-full sm:w-auto sm:min-w-[200px] order-3 sm:order-none">
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">
                   Key {isDuplicate && <span className="text-red-600">⚠ Duplicate!</span>}
                 </label>
@@ -158,7 +158,7 @@ const KLVBuilder: React.FC<KLVBuilderProps> = ({ onBuild }) => {
               </div>
               
               {/* Value Input */}
-              <div className="flex-1">
+              <div className="flex-1 min-w-0 w-full sm:w-auto order-4 sm:order-none">
                 <label className="block text-xs font-medium text-gray-700 mb-1.5">
                   Value 
                   <span className="ml-2 text-gray-500 font-normal">
@@ -180,7 +180,7 @@ const KLVBuilder: React.FC<KLVBuilderProps> = ({ onBuild }) => {
               </div>
               
               {/* Delete Button */}
-              <div className="flex-shrink-0 pt-7">
+              <div className="flex-shrink-0 ml-auto sm:ml-0 sm:pt-7 order-2 sm:order-none">
                 <button
                   onClick={() => removeEntry(index)}
                   disabled={entries.length === 1}
