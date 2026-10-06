@@ -280,33 +280,43 @@ const KLVParser = {
   parse(klvString: string): KLVParseResult {
     const results: KLVEntry[] = [];
     const errors: string[] = [];
-    let pos = 0;
-    const clean = klvString.replace(/\s/g, '');
+    // Whitespace between entries is skipped, but values are read literally since
+    // fields may be space-padded (e.g. 042 merchant ID). Whitespace before a value
+    // is skipped only in spaced form ("002 06 AB48DE"), detected by a gap between
+    // key and length; a spaced-form value that itself starts with whitespace loses it.
+    const skipWs = (i: number): number => {
+      while (i < klvString.length && /\s/.test(klvString[i])) i++;
+      return i;
+    };
+    let pos = skipWs(0);
 
-    while (pos < clean.length) {
-      if (pos + 5 > clean.length) {
+    while (pos < klvString.length) {
+      const key = klvString.substring(pos, pos + 3);
+      const lenStart = skipWs(pos + 3);
+      const lenStr = klvString.substring(lenStart, lenStart + 2);
+
+      if (key.length < 3 || lenStr.length < 2) {
         errors.push(`Incomplete entry at position ${pos}`);
         break;
       }
 
-      const key = clean.substring(pos, pos + 3);
-      const lenStr = clean.substring(pos + 3, pos + 5);
-      
       if (!/^\d{3}$/.test(key) || !/^\d{2}$/.test(lenStr)) {
         errors.push(`Invalid format at position ${pos}`);
         break;
       }
 
       const len = parseInt(lenStr, 10);
-      const valEnd = pos + 5 + len;
+      const spaced = lenStart > pos + 3;
+      const valStart = spaced ? skipWs(lenStart + 2) : lenStart + 2;
+      const valEnd = valStart + len;
 
-      if (valEnd > clean.length) {
-        errors.push(`Incomplete value at position ${pos + 5}`);
+      if (valEnd > klvString.length) {
+        errors.push(`Incomplete value at position ${valStart}`);
         break;
       }
 
-      const value = clean.substring(pos + 5, pos + 5 + len);
-      
+      const value = klvString.substring(valStart, valEnd);
+
       // Create base entry
       const entry: KLVEntry = { 
         key, 
@@ -324,7 +334,7 @@ const KLVParser = {
       }
 
       results.push(entry);
-      pos = valEnd;
+      pos = skipWs(valEnd);
     }
 
     return { results, errors };
