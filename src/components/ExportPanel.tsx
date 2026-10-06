@@ -42,24 +42,24 @@ const ExportPanel: React.FC<ExportPanelProps> = ({ results }) => {
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
       <button
         onClick={() => exportData('json')}
-        className="px-3 py-1 bg-green-100 text-green-800 rounded text-sm hover:bg-green-200 transition-colors"
+        className="px-3 py-2 sm:py-1 bg-green-100 text-green-800 rounded text-sm hover:bg-green-200 transition-colors"
         title="Export as JSON"
       >
         JSON
       </button>
       <button
         onClick={() => exportData('csv')}
-        className="px-3 py-1 bg-blue-100 text-blue-800 rounded text-sm hover:bg-blue-200 transition-colors"
+        className="px-3 py-2 sm:py-1 bg-blue-100 text-blue-800 rounded text-sm hover:bg-blue-200 transition-colors"
         title="Export as CSV"
       >
         CSV
       </button>
       <button
         onClick={() => exportData('table')}
-        className="px-3 py-1 bg-purple-100 text-purple-800 rounded text-sm hover:bg-purple-200 transition-colors"
+        className="px-3 py-2 sm:py-1 bg-purple-100 text-purple-800 rounded text-sm hover:bg-purple-200 transition-colors"
         title="Export as Table"
       >
         Table
